@@ -1,0 +1,10 @@
+com\sabancihan\collectionservice\controller\VulnerabilityController.class
+com\sabancihan\collectionservice\CollectionServiceApplication.class
+com\sabancihan\collectionservice\model\Vulnerability$VulnerabilityBuilder.class
+com\sabancihan\collectionservice\service\VulnerabilityService.class
+com\sabancihan\collectionservice\mapper\VulnerabilityMapperImpl.class
+com\sabancihan\collectionservice\repository\VulnerabilityRepository.class
+com\sabancihan\collectionservice\model\Vulnerability.class
+com\sabancihan\collectionservice\dto\VulnerabilityResponse.class
+com\sabancihan\collectionservice\mapper\VulnerabilityMapper.class
+com\sabancihan\collectionservice\dto\VulnerabilityResponse$VulnerabilityResponseBuilder.class
