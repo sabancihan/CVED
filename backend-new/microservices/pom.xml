@@ -15,7 +15,6 @@
         <module>collection-service</module>
         <module>detection-service</module>
         <module>management-service</module>
-        <module>discovery-server</module>
     </modules>
 
     <parent>

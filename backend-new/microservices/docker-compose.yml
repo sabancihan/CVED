@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: management
+    ports:
+      - "5432:5432"
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    container_name: api-gateway
+    restart: always
+    environment:
+      - ENVIRONMENT_HOST=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  discovery-server:
+    build: ./discovery-server
+    ports:
+      - "8761:8761"
+    container_name: discovery-server
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ENVIRONMENT_HOST=host.docker.internal
+
+  detection-service:
+    build: ./detection-service
+    container_name: detection-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ENVIRONMENT_HOST=host.docker.internal
+
+  management-service:
+    build: ./management-service
+    container_name: management-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ENVIRONMENT_HOST=host.docker.internal
+
+  collection-service:
+    build: ./collection-service
+    container_name: collection-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ENVIRONMENT_HOST=host.docker.internal
+
+  register-service:
+    build: ./register-service
+    container_name: register-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ENVIRONMENT_HOST=host.docker.internal
+
+
+

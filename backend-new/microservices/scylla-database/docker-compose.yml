@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  scylladb:
+    image: scylladb/scylla
+    container_name: some-scylla
+
+    ports:
+      - "9042:9042"
+
+    volumes:
+      - /var/lib/scylla:/var/lib/scylla
+
+
+
+
+

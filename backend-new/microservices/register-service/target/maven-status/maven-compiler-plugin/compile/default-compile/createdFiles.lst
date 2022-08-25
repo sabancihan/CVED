@@ -1,0 +1,5 @@
+com\sabancihan\registerservice\dto\RegisterRequest.class
+com\sabancihan\registerservice\RegisterServiceApplication.class
+com\sabancihan\registerservice\controller\RegisterController.class
+com\sabancihan\registerservice\dto\RegisterRequest$RegisterRequestBuilder.class
+com\sabancihan\registerservice\service\RegisterService.class
