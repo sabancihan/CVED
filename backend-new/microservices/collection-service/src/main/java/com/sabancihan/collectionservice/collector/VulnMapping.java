@@ -42,6 +42,10 @@ public class VulnMapping {
     class CPEMatch {
         public Boolean vulnerable;
         public String cpe23Uri;
+        public String versionEndExcluding;
+        public String versionEndIncluding;
+        public String versionStartExcluding;
+        public String versionStartIncluding;
     }
 
 

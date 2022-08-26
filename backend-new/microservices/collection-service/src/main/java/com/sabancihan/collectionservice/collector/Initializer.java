@@ -3,12 +3,14 @@ package com.sabancihan.collectionservice.collector;
 import com.sabancihan.collectionservice.collector.Downloader;
 import com.sabancihan.collectionservice.collector.Parser;
 import com.sabancihan.collectionservice.collector.Storer;
+import com.sabancihan.collectionservice.model.Vulnerability;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.IntStream;
@@ -58,12 +60,12 @@ public class Initializer implements CommandLineRunner {
 
         return CompletableFuture.runAsync(() -> {
            try {
-                downloader.download(format);
-                parser.parse();
-                storer.store();
+                VulnMapping jsonVulnerabilities = downloader.download(format);
+                List<Vulnerability> vulnerabilities =  parser.parse(jsonVulnerabilities);
+                storer.store(vulnerabilities);
            }
               catch (Exception e) {
-                log.error("Error downloading: {}", format);
+                log.error("Error Collecting vulnerabilities: {}", format);
               }
         });
 
