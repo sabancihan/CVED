@@ -5,10 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.lang.module.ModuleDescriptor;
 import java.util.*;
-import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.Collections.emptySet;
 
 @Slf4j
 @Component
@@ -31,7 +35,34 @@ public class Parser {
 
         List<Vulnerability> vulnerabilities = new ArrayList<>();
 
+
+
+
+
+
         for (Map.Entry<String, List<VulnMapping.CPEMatch>> entry : matchListGrouped.entrySet()) {
+
+
+            var entryValue = entry.getValue();
+
+            var match = entryValue.stream().findFirst();
+
+            if (match.isEmpty())
+                continue;
+
+            String cpeUri = match.get().getCpe23Uri();
+
+
+           Set<Vulnerability.AffectedVersions> affectedVersions = getVersions(entryValue);
+
+              vulnerabilities.add(Vulnerability.builder().
+                      id(cve).
+                      vendorName(cpeUri.split(":")[3]).
+                      softwareName(cpeUri.split(":")[4]).
+                      affectedVersions(affectedVersions).
+                      build());
+
+
 
         }
 
@@ -41,6 +72,57 @@ public class Parser {
 
 
 
+
+    }
+
+    private  Set<Vulnerability.AffectedVersions> getVersions(List<VulnMapping.CPEMatch> matches) {
+
+
+        if (matches.size() == 0) {
+            return emptySet();
+        }
+
+        Set<Vulnerability.AffectedVersions> affectedVersions = new HashSet<>();
+        ModuleDescriptor.Version minVersion = ModuleDescriptor.Version.parse(Integer.MAX_VALUE + "");
+        ModuleDescriptor.Version maxVersion =  null;
+
+
+        String pattern = "(?!\\.)(\\d+(\\.\\d+)+)(?:[-.][A-Z]+)?(?![\\d.])$";
+
+
+        for (VulnMapping.CPEMatch match : matches) {
+            String versionStr = match.getCpe23Uri().split(":")[5];
+
+            if (versionStr.matches(pattern)) {
+                ModuleDescriptor.Version version = ModuleDescriptor.Version.parse(versionStr);
+                if (version.compareTo(minVersion) < 0) {
+                    minVersion = version;
+                }
+            }
+
+
+
+            var endVersion = match.versionEndIncluding == null ? match.versionEndExcluding : match.versionEndIncluding;
+            var startVersion = match.versionStartIncluding == null ? match.versionStartExcluding : match.versionStartIncluding;
+
+            if (endVersion != null) {
+                if (startVersion != null) {
+                    affectedVersions.add(new Vulnerability.AffectedVersions(startVersion, endVersion));
+                }
+                else if (endVersion.matches(pattern)) {
+                    maxVersion = ModuleDescriptor.Version.parse(endVersion);
+                }
+
+
+
+            }
+
+
+        }
+        var minVersionStr = Objects.equals(minVersion.toString(), Integer.MAX_VALUE + "") ? null : minVersion.toString();
+        affectedVersions.add(new Vulnerability.AffectedVersions(minVersionStr, maxVersion == null ? null :  maxVersion.toString()));
+
+        return affectedVersions;
 
     }
 

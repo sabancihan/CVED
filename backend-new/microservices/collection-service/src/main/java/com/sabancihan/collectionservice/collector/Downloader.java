@@ -8,14 +8,20 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 
@@ -26,6 +32,8 @@ import java.util.zip.GZIPInputStream;
 public class Downloader   {
 
     private final ObjectMapper objectMapper;
+    private final Requester requester;
+
 
 
 
