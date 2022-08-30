@@ -5,6 +5,7 @@ import org.apache.http.conn.util.InetAddressUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,17 +20,25 @@ public class Server {
     @GeneratedValue
     private UUID id;
 
-    String ipAddress;
-    Integer port;
+    private String ipAddress;
+    private Integer port;
 
     @OneToMany(mappedBy = "server")
 
     Set<SoftwareVersioned> software;
 
 
-    @OneToMany(mappedBy = "server")
+    //Hardware
 
-    Set<Hardware> hardware;
+
+
+
+    private String cpu;
+    private String ram;
+    private String disk;
+
+    //
+
 
     @ManyToOne
     @JoinColumn(name = "user_username")

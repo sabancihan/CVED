@@ -1,24 +1,22 @@
-package com.sabancihan.managementservice.mapstruct.dto;
+package com.sabancihan.managementservice.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
+
+@Embeddable
 @AllArgsConstructor
-@Builder
 @Data
 @NoArgsConstructor
 
-public class SoftwareResponseDTO {
-
-
-
+public class SoftwareId implements Serializable {
     private String vendor_name;
-
     private String product_name;
+
 
 
 }

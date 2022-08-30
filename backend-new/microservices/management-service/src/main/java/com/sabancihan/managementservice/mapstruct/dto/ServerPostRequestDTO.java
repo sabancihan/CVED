@@ -33,7 +33,13 @@ public class ServerPostRequestDTO {
     private Set<SoftwareVersioned> software;
 
 
-    private Set<HardwarePostRequestDTO> hardware;
+    //Hardware
+
+    private String cpu;
+    private String ram;
+    private String disk;
+
+    //
 
 
 

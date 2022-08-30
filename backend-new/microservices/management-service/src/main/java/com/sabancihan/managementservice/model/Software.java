@@ -2,12 +2,9 @@ package com.sabancihan.managementservice.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -17,21 +14,18 @@ import java.util.UUID;
 @Setter
 public class Software {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
 
 
-
-    String vendor_name;
-
-    String product_name;
+    @EmbeddedId
+    private SoftwareId id;
 
 
     @OneToMany(mappedBy = "software")
     Set<SoftwareVersioned> softwareVersions;
 
 
-
-
+    public Software(SoftwareId id) {
+        this.id = id;
+        this.softwareVersions = new HashSet<>();
+    }
 }

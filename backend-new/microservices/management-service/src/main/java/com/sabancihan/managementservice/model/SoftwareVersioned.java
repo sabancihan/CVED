@@ -13,6 +13,9 @@ import java.util.UUID;
 @Setter
 public class SoftwareVersioned {
 
+    public static final String VersionPattern = "(?!\\.)(\\d+(\\.\\d+)+)(?:[-.][A-Z]+)?(?![\\d.])$";
+
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -30,6 +33,9 @@ public class SoftwareVersioned {
     Software software;
 
     String version;
+
+
+
 
 
 
