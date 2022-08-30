@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.module.ModuleDescriptor;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,7 +57,7 @@ public class Parser {
                       id(cve).
                       vendorName(cpeUri.split(":")[3]).
                       softwareName(cpeUri.split(":")[4]).
-                      affectedVersions(affectedVersions).
+                      affectedVersions(affectedVersions.stream().map(Vulnerability.AffectedVersions::toString).collect(Collectors.toSet())).
                       build());
 
 
@@ -120,7 +118,9 @@ public class Parser {
 
         }
         var minVersionStr = Objects.equals(minVersion.toString(), Integer.MAX_VALUE + "") ? null : minVersion.toString();
-        affectedVersions.add(new Vulnerability.AffectedVersions(minVersionStr, maxVersion == null ? null :  maxVersion.toString()));
+
+        if (affectedVersions.isEmpty())
+            affectedVersions.add(new Vulnerability.AffectedVersions(minVersionStr, maxVersion == null ? null :  maxVersion.toString()));
 
         return affectedVersions;
 

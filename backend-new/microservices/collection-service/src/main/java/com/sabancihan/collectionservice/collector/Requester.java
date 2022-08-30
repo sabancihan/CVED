@@ -1,6 +1,7 @@
 package com.sabancihan.collectionservice.collector;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sabancihan.collectionservice.model.DownloadLog;
 import com.sabancihan.collectionservice.repository.DownloadLogRepository;
@@ -10,11 +11,19 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -22,14 +31,19 @@ import java.util.*;
 @RequiredArgsConstructor
 
 public class Requester {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RestResponse {
+        public VulnMapping result;
+        public Integer resultsPerPage;
+        public Integer totalResults;
+    }
 
 
     public final Integer maxResult = 2000;
 
     @Value("${nvd.nist.api.key}")
-    private String apiKey;
+    private  String apiKey;
 
-    public final String restUrl = String.format("https://services.nvd.nist.gov/rest/json/cves/1.0/?apiKey=%s&resultsPerPage=%d", apiKey, maxResult);
 
 
     private final ObjectMapper objectMapper;
@@ -42,26 +56,42 @@ public class Requester {
 
 
 
-    public List<VulnMapping> getRestRequest(LocalDateTime lastModified) {
-        String now = LocalDateTime.now().toString();
+    public List<VulnMapping> getRestRequest(ZonedDateTime lastModified) throws UnsupportedEncodingException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss:SSS z");
+
+        String restUrl = String.format("https://services.nvd.nist.gov/rest/json/cves/1.0/?apiKey=%s&resultsPerPage=%d", apiKey, maxResult);
+
+
+
+        //Convert DateTime to pattern yyyy-MM-dd'T'HH:mm:ss:SSS z
+
+
+
+
+
+        String lastModifiedString = lastModified.format(formatter);
+        String nowString = ZonedDateTime.now().format(formatter);
+
+
+
 
         //List of map entries
         List<Map<String, String>> parameterList = Arrays.asList(
                 Map.ofEntries(
                         Map.entry("sortBy", "publishDate"),
-                        Map.entry("pubStartDate", lastModified.toString()),
-                        Map.entry("pubEndDate", now)
+                        Map.entry("pubStartDate", URLEncoder.encode(lastModifiedString, StandardCharsets.UTF_8)),
+                        Map.entry("pubEndDate", URLEncoder.encode(nowString, StandardCharsets.UTF_8))
                 ),
                 Map.ofEntries(
                         Map.entry("sortBy", "modifiedDate"),
-                        Map.entry("modStartDate", lastModified.toString()),
-                        Map.entry("modEndDate", now)
+                        Map.entry("modStartDate", URLEncoder.encode(lastModifiedString, StandardCharsets.UTF_8)),
+                        Map.entry("modEndDate", URLEncoder.encode(nowString, StandardCharsets.UTF_8))
                 )
         );
 
 
        List<VulnMapping>  mappings =  parameterList.stream().map(parameterMap -> {
-
 
 
 
@@ -74,10 +104,10 @@ public class Requester {
                 con.setRequestMethod("GET");
 
                 if (con.getResponseCode() == HttpStatus.SC_OK) {
-                    log.info("Vulnerabilities downloaded from {}", restUrl);
-                    return objectMapper.readValue(con.getInputStream(), VulnMapping.class);
+                    log.info("Vulnerabilities pulled");
+                    return objectMapper.readValue(con.getInputStream(), RestResponse.class).result;
                 } else {
-                    log.error("Vulnerabilities could not be downloaded from {}", restUrl);
+                    log.error("Vulnerabilities could not be pulled");
                     return null;
                 }
             } catch (IOException e) {
@@ -96,18 +126,20 @@ public class Requester {
        }
     }
 
-    public void  handleRestRequest(LocalDateTime lastModified) {
-        LocalDateTime now = LocalDateTime.now();
+    public void  handleRestRequest(ZonedDateTime lastModified) throws UnsupportedEncodingException {
+        ZonedDateTime now = ZonedDateTime.now();
         var vulnMapping = getRestRequest(lastModified);
         if (vulnMapping != null) {
 
             vulnMapping.stream().map(parser::parse).forEach(storer::store);
 
+
+
             log.info("Vulnerabilities from rest api downloaded and saved");
             downloadLogRepository.insert(
                     DownloadLog.builder()
                             .id(UUID.randomUUID().toString())
-                            .date(now)
+                            .date(now.toLocalDateTime())
                             .build());
         }
     }
@@ -118,7 +150,7 @@ public class Requester {
 
 
 
-    public LocalDateTime lastModified(String templateURL, List<String> recentUpdates) throws MalformedURLException {
+    public ZonedDateTime lastModified(String templateURL, List<String> recentUpdates) throws MalformedURLException {
 
 
         return recentUpdates.stream().map(recentUpdate -> {
@@ -129,27 +161,32 @@ public class Requester {
                 con.setRequestMethod("GET");
 
                 if (con.getResponseCode() == HttpStatus.SC_OK) {
-                    var body = con.getResponseMessage();
 
-                    var properties = body.split(":");
+                    var  br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                    if (properties[0].equals("lastModifiedDate")) {
-                        return LocalDateTime.parse(properties[1]);
+                    var body = br.readLine();
+
+
+                    var properties = body.split("Date:");
+
+                    if (properties[0].equals("lastModified")) {
+                        return ZonedDateTime.parse(properties[1]);
                     }
 
                 }
 
-                return LocalDateTime.MIN;
+                return ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneId.systemDefault());
 
             } catch (IOException e) {
                 e.printStackTrace();
-                return  LocalDateTime.MIN;
+                return  ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneId.systemDefault());
             }
 
 
 
 
-        }).min(LocalDateTime::compareTo).orElseGet(LocalDateTime::now);
+
+        }).min(ZonedDateTime::compareTo).orElseGet(ZonedDateTime::now);
 
 
 

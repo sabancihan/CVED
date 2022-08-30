@@ -1,25 +1,19 @@
 package com.sabancihan.collectionservice.collector;
 
-import com.sabancihan.collectionservice.collector.Downloader;
-import com.sabancihan.collectionservice.collector.Parser;
-import com.sabancihan.collectionservice.collector.Storer;
 import com.sabancihan.collectionservice.model.DownloadLog;
 import com.sabancihan.collectionservice.model.Vulnerability;
 import com.sabancihan.collectionservice.repository.DownloadLogRepository;
 import com.sabancihan.collectionservice.repository.VulnerabilityRepository;
-import jnr.constants.platform.Local;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -33,7 +27,7 @@ public class Initializer implements CommandLineRunner {
     private final VulnerabilityRepository vulnerabilityRepository;
 
     private final Integer startYear = 2002;
-    private final Integer endYear = LocalDateTime.now().getYear();
+    private final Integer endYear = ZonedDateTime.now().getYear();
 
     private final String templateUrl = "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-%s.%s";
 
@@ -51,9 +45,9 @@ public class Initializer implements CommandLineRunner {
     private final DownloadLogRepository downloadLogRepository;
 
 
-    public LocalDateTime initialize() {
+    public ZonedDateTime initialize() {
 
-        LocalDateTime lastModified = LocalDateTime.now();
+        ZonedDateTime lastModified = ZonedDateTime.now();
 
 
         List<String> years = IntStream.rangeClosed(startYear, endYear).mapToObj(String::valueOf).collect(Collectors.toList());
@@ -64,10 +58,9 @@ public class Initializer implements CommandLineRunner {
 
 
         try {
-            var lastModifiedRecent = requester.lastModified(templateUrl, recent);
-            lastModified = lastModifiedRecent == LocalDateTime.MIN ? LocalDateTime.now() : lastModifiedRecent;
+            lastModified = requester.lastModified(templateUrl, recent);
         } catch (MalformedURLException e) {
-            lastModified = LocalDateTime.now();
+            lastModified = ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneId.systemDefault());
         }
 
         years.add("recent");
@@ -87,7 +80,7 @@ public class Initializer implements CommandLineRunner {
 
                     DownloadLog.builder()
                             .id(UUID.randomUUID().toString())
-                            .date(lastModified)
+                            .date(lastModified.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime())
 
                             .build());
 
@@ -100,13 +93,13 @@ public class Initializer implements CommandLineRunner {
         return lastModified;
     }
 
-    public LocalDateTime handleInitialized() {
+    public ZonedDateTime handleInitialized() {
 
         Optional<DownloadLog>  lastUpdate = downloadLogRepository.findTopBy();
 
         if (lastUpdate.isPresent()) {
             log.info("Database is already initialized");
-            return lastUpdate.get().getDate();
+            return lastUpdate.get().getDate().atZone(ZoneId.systemDefault());
         }
 
         else {
@@ -131,7 +124,7 @@ public class Initializer implements CommandLineRunner {
 
             CompletableFuture.runAsync(() -> {
 
-                LocalDateTime lastModified = vulnerabilityRepository.findTopBy().isPresent() ? handleInitialized() : initialize();
+                ZonedDateTime lastModified = vulnerabilityRepository.findTopBy().isPresent() ? handleInitialized() : initialize();
 
 
                 CompletableFuture.runAsync(listener::scheduleRest);
