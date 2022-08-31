@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Builder
@@ -21,6 +22,9 @@ public class SoftwareVersionedPostRequestDTO {
 
     @NotNull
     private String version;
+
+    @NotNull
+    private UUID server;
 
     @AssertTrue
     private boolean isVersionValid() {

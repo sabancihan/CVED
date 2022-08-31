@@ -35,7 +35,7 @@ public class SoftwareVersionedController {
 
 
     @DeleteMapping("{id}")
-    public void deleteServer(@PathVariable UUID id) {
+    public void deleteSoftwareVersioned(@PathVariable UUID id) {
         softwareVersionedService.deleteSoftwareVersioned(id);
     }
 

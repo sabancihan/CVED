@@ -11,6 +11,7 @@ import org.apache.http.conn.util.InetAddressUtils;
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class ServerPostRequestDTO {
     private String user;
 
 
-    private Set<SoftwareVersioned> software;
+    private Set<ServerSoftwarePostRequestDTO> software = new HashSet<>();
 
 
     //Hardware

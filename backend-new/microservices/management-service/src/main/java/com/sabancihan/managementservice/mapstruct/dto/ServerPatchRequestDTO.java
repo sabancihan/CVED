@@ -20,6 +20,17 @@ public class ServerPatchRequestDTO {
 
     private JsonNullable<String> userUsername;
 
+    //Hardware
+
+
+
+
+    private JsonNullable<String> cpu;
+    private JsonNullable<String> ram;
+    private JsonNullable<String> disk;
+
+    //
+
     @AssertTrue
     public boolean isValidIpAddress() {
         return ipAddress.isPresent() ||  InetAddressUtils.isIPv4Address(ipAddress.get());

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Builder
@@ -17,18 +18,29 @@ import java.util.Set;
 @NoArgsConstructor
 public class ServerResponseDTO {
 
+    private UUID id;
+
 
     private String ipAddress;
     private Integer port;
 
-    private List<HardwareResponseDTO> hardware;
+
+    //Hardware
 
 
 
-    private Set<SoftwareVersioned> software;
+
+    private String cpu;
+    private String ram;
+    private String disk;
+
+    //
 
 
-    private User user;
+
+    private Set<SoftwareVersionedResponseDTO> software;
+
+
 
 
 

@@ -1,11 +1,11 @@
 package com.sabancihan.managementservice.model;
 
 import lombok.*;
-import org.apache.http.conn.util.InetAddressUtils;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -15,17 +15,23 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@Cacheable
+
+
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Server {
     @Id
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
     private String ipAddress;
+    @Column(nullable = false)
     private Integer port;
 
-    @OneToMany(mappedBy = "server")
+    @OneToMany(mappedBy = "server",fetch = FetchType.EAGER,orphanRemoval = true)
 
-    Set<SoftwareVersioned> software;
+    private Set<SoftwareVersioned> software;
 
 
     //Hardware
@@ -33,24 +39,33 @@ public class Server {
 
 
 
+    @Column(nullable = false)
     private String cpu;
+
+    @Column(nullable = false)
     private String ram;
+
+    @Column(nullable = false)
     private String disk;
 
     //
 
 
-    @ManyToOne
-    @JoinColumn(name = "user_username")
-    User user;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_username", nullable = false)
+    private  User user;
 
 
-
-    @AssertTrue
-    public boolean isValidHost() {
-        return InetAddressUtils.isIPv4Address(ipAddress) && port > 0 && port < 65536;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Server server = (Server) o;
+        return id != null && Objects.equals(id, server.id);
     }
 
-
-
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

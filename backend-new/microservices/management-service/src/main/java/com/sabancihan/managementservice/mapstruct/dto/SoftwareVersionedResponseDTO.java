@@ -21,7 +21,7 @@ public class SoftwareVersionedResponseDTO {
 
     private UUID id;
 
-    private Software software;
+    private SoftwareResponseDTO software;
 
     private String version;
 }

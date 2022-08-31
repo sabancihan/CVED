@@ -20,7 +20,7 @@ public class SoftwareController {
     private final SoftwareService softwareService;
 
      @GetMapping
-     public List<SoftwareResponseDTO> getAllServers() {
+     public List<SoftwareResponseDTO> getAllSoftware() {
          return softwareService.findAll();
      }
 
