@@ -16,8 +16,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @Cacheable
-
-
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Server {
     @Id

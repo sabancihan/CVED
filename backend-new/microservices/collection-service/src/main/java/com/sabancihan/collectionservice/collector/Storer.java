@@ -9,7 +9,6 @@ import com.datastax.oss.driver.api.querybuilder.QueryBuilder;
 import com.google.common.collect.Lists;
 import com.sabancihan.collectionservice.model.Vulnerability;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Cluster;
 import org.springframework.data.cassandra.core.*;
 import org.springframework.stereotype.Component;
 
