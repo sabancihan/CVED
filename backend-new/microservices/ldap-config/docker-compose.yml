@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+
+  ldap_server:
+    image: sabancihan/ldap:withdata
+    hostname: ldap01.localdomain
+    environment:
+      LDAP_ADMIN_PASSWORD: guvenlisifre
+      LDAP_BASE_DN: dc=sabancihan,dc=com
+      LDAP_REPLICATION: "true"
+      LDAP_REPLICATION_HOSTS: "#PYTHON2BASH:['ldap://ldap01.localdomain','ldap://ldap02.localdomain']"
+    ports:
+      - "389:389"
+    volumes:
+      - ldap_data:/var/lib/ldap
+      - ldap_config:/etc/ldap/slapd.d
+
+  ldap_server_register:
+    image: sabancihan/ldap:withdata
+    hostname: ldap02.localdomain
+    environment:
+      LDAP_REPLICATION : "true"
+      LDAP_ADMIN_PASSWORD: guvenlisifre
+      LDAP_BASE_DN: dc=sabancihan,dc=com
+      LDAP_REPLICATION_HOSTS: "#PYTHON2BASH:['ldap://ldap01.localdomain','ldap://ldap02.localdomain']"
+
+    ports:
+      - "1389:389"
+
+
+
+  ldap_server_admin:
+    image: osixia/phpldapadmin:0.9.0
+    ports:
+      - "8090:80"
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: ldap_server
+      PHPLDAPADMIN_HTTPS: 'false'
+
+volumes:
+  ldap_data:
+  ldap_config:

@@ -1,0 +1,61 @@
+
+dn: ou=people,dc=sabancihan,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=sabancihan,dc=com
+objectclass: top
+objectclass: organizationalUnit
+ou: groups
+
+dn: uid=erhanb,ou=people,dc=sabancihan,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Erhan Bolukbas
+sn: Bolukbas
+uid: erhanb
+mail:erhanb@sabanciuniv.edu
+userPassword: {bcrypt}$2a$12$YG//Vhy8bfnkG3XMHqrTROHKnrEonZqWV6kF9/niwbpKPOQjhlpIa
+
+
+dn: uid=alperent,ou=people,dc=sabancihan,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Alperen Torun
+sn: Torun
+uid: alperent
+mail:alperent@sabanciuniv.edu
+userPassword: {bcrypt}$2a$12$p5O5QQD66CIDPEYt2cDqHOgfzn79teaIAMChoSPAAAttcpMWT8eCG
+
+dn: uid=yetkin,ou=people,dc=sabancihan,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Yetkin Kişi
+sn: Kişi
+uid: yetkin
+mail:yetkinkisi@sabanciuniv.edu
+userPassword: {bcrypt}$2a$12$EmnCVjYAfOm4YL3K/FgePuyhpcfAtLOfryJGRDoScvmnZT4ykfoJi
+
+dn: uid=ercan,ou=people,dc=sabancihan,dc=com
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: Er Can
+sn: Can
+uid: ercan
+mail:ercan@sabanciuniv.edu
+userPassword: {bcrypt}$2a$12$gjDevdXXGSMV/C.KLa1EyOVoQTx4vjlo35wekkmv/kOTHQNbkNu4C
+
+dn: cn=admins,ou=groups,dc=sabancihan,dc=com
+cn: admins
+objectclass: groupOfUniqueNames
+objectclass: top
+uniquemember: uid=erhanb,ou=people,dc=sabancihan,dc=com
