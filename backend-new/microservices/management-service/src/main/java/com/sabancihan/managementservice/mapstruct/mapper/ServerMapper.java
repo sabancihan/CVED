@@ -6,6 +6,7 @@ import com.sabancihan.managementservice.mapstruct.Qualifiers;
 import com.sabancihan.managementservice.mapstruct.dto.ServerPatchRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.ServerPostRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.ServerResponseDTO;
+import com.sabancihan.managementservice.mapstruct.dto.ServerSummaryDTO;
 import com.sabancihan.managementservice.model.Server;
 import com.sabancihan.managementservice.repository.ServerRepository;
 import com.sabancihan.managementservice.service.ServerService;
@@ -28,6 +29,8 @@ public interface ServerMapper {
     Server serverPatchRequestDTOToServer(ServerPatchRequestDTO serverPatchRequestDTO);
 
     Server serverResponseDTOToServer(ServerResponseDTO serverResponseDTO);
+
+    ServerSummaryDTO serverToServerSummary(Server server);
 
 
 

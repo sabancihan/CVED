@@ -1,7 +1,9 @@
 package com.sabancihan.managementservice.service;
 
 import com.sabancihan.managementservice.mapstruct.dto.*;
+import com.sabancihan.managementservice.mapstruct.mapper.ServerMapper;
 import com.sabancihan.managementservice.mapstruct.mapper.SoftwareVersionedMapper;
+import com.sabancihan.managementservice.mapstruct.mapper.UserMapper;
 import com.sabancihan.managementservice.model.Server;
 import com.sabancihan.managementservice.model.Software;
 import com.sabancihan.managementservice.model.SoftwareId;
@@ -10,9 +12,13 @@ import com.sabancihan.managementservice.repository.SoftwareRepository;
 import com.sabancihan.managementservice.repository.SoftwareVersionedRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +28,11 @@ import java.util.UUID;
 @Slf4j
 public class SoftwareVersionedService {
 
+    private final StreamBridge streamBridge;
+
+    private final UserMapper userMapper;
+
+    private final ServerMapper serverMapper;
 
     private final SoftwareVersionedRepository softwareVersionedRepository;
 
@@ -52,6 +63,22 @@ public class SoftwareVersionedService {
 
         SoftwareVersioned softwareVersioned = softwareVersionedMapper.softwareVersionedPostRequestDTOToSoftwareVersioned(softwareVersionedPostRequestDTO);
         Software software = softwareVersioned.getSoftware();
+
+
+        Server server = softwareVersioned.getServer();
+
+        var message = ManagementCollectionMessageDTO.builder()
+                .user(userMapper.userToUserResponse(server.getUser()))
+                .server(serverMapper.serverToServerSummary(server))
+                .softwareVersioned(Collections.singletonList(softwareVersionedMapper.softwareVersionedToSoftwareVersionedGetRequest(softwareVersioned)))
+                .build();
+
+
+        log.info("Sending single software to management collection queue");
+
+
+        streamBridge.send("managementUpdateEventSupplier-out-0", MessageBuilder.withPayload(message).build());
+
 
 
         softwareVersioned.setSoftware(softwareRepository.findById(software.getId()).orElse(softwareRepository.save(software)));

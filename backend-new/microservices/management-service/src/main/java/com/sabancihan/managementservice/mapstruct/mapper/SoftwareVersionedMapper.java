@@ -25,6 +25,8 @@ public interface SoftwareVersionedMapper {
 
     SoftwareVersioned softwareVersionedPostRequestDTOToSoftwareVersioned(SoftwareVersionedPostRequestDTO softwareVersionedPostRequestDTO);
 
+    SoftwareVersionedGetRequestDTO softwareVersionedToSoftwareVersionedGetRequest(SoftwareVersioned softwareVersioned);
+
 
     List<SoftwareVersionedResponseDTO> softwareVersionedListToSoftwareVersionedResponses(List<SoftwareVersioned> softwareVersionedList);
 

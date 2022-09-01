@@ -1,5 +1,6 @@
 package com.sabancihan.managementservice.mapstruct.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,14 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @NoArgsConstructor
-public class SoftwareVersionedGetRequestDTO {
+public class ServerSummaryDTO {
 
-    private String version;
-
-
-
-    private SoftwareGetRequestDTO software;
-
-
+        private String ipAddress;
+        private Integer port;
+        private UserResponseDTO user;
 
 }
