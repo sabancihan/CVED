@@ -1,14 +1,25 @@
 package com.sabancihan.detectionservice.service;
 
 
+import com.sabancihan.detectionservice.dto.DetectionRequestDTO;
+import com.sabancihan.detectionservice.dto.DetectionSoftwareVulnerabilityDTO;
 import com.sabancihan.detectionservice.dto.VulnerabilityDTO;
+import com.sabancihan.detectionservice.dto.VulnerabilityNotificationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Bean;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.module.ModuleDescriptor;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 @Service
 @Transactional
@@ -18,24 +29,98 @@ public class DetectionService implements CommandLineRunner {
 
     private final StreamBridge streamBridge;
 
-        public boolean detectVulnerability() {
-            boolean isVulnerable = Math.random() > 0.5;
-
-            if (isVulnerable) {
-                log.info("Vulnerability detected");
-                streamBridge.send("notificationEventSupplier-out-0", MessageBuilder.withPayload(new VulnerabilityDTO("CVE-2018-5461")).build());
-            }
-
-            return isVulnerable;
-
-        }
-
-    @Override
-    public void run(String... args) throws Exception {
-        while (!detectVulnerability()) {
-            log.info("No vulnerability detected");
+    //streamBridge.send("notificationEventSupplier-out-0", MessageBuilder.withPayload(new VulnerabilityNotificationDTO("CVE-2018-5461")).build());
 
 
-        }
+
+
+    @Bean
+    public Consumer<Message<DetectionRequestDTO>> detectionEventSupplier() {
+        return message -> {
+            DetectionRequestDTO request =  message.getPayload();
+
+            request.getVulnerabilities().forEach(
+                    vulnerability -> {
+                        var vulnerabilities = detectVulnerability(vulnerability.getUsedVersion(),vulnerability.getAffectedVersions());
+
+
+
+                        if (!vulnerabilities.isEmpty()) {
+                            streamBridge.send("notificationEventSupplier-out-0", MessageBuilder.withPayload(new VulnerabilityNotificationDTO(vulnerability.getVulnerabilityId())).build());
+                        }
+                    }
+            );
+
+
+
+        };
     }
+
+
+    private Set<String> detectVulnerability(String usedVersionString, List<DetectionSoftwareVulnerabilityDTO> detectionSoftwareVulnerabilityDTOList) {
+        ModuleDescriptor.Version usedVersion = ModuleDescriptor.Version.parse(usedVersionString);
+
+        Set<String> affectedCVEs = new HashSet<>();
+
+
+        detectionSoftwareVulnerabilityDTOList.forEach(
+                detectionSoftwareVulnerabilityDTO -> {
+
+                    String id = detectionSoftwareVulnerabilityDTO.getId();
+
+                    detectionSoftwareVulnerabilityDTO.getAffectedVersions().forEach(
+                            affectedVersion -> {
+                                var versionRange = affectedVersion.split(":");
+                                if (versionRange.length == 2) {
+                                    String min = versionRange[0];
+                                    String max = versionRange[1];
+
+                                    if (min.equals("null")) {
+
+                                        if (max.equals("null")) {
+                                            affectedCVEs.add(id);
+                                        } else {
+                                            if (usedVersion.compareTo(ModuleDescriptor.Version.parse(max)) <= 0) {
+                                                affectedCVEs.add(id);
+                                            }
+                                        }
+                                    } else {
+                                        if (max.equals("null")) {
+                                            if (usedVersion.compareTo(ModuleDescriptor.Version.parse(min)) >= 0) {
+                                                affectedCVEs.add(id);
+                                            }
+                                        } else {
+                                            if (usedVersion.compareTo(ModuleDescriptor.Version.parse(min)) >= 0 && usedVersion.compareTo(ModuleDescriptor.Version.parse(max)) <= 0) {
+                                                affectedCVEs.add(id);
+                                            }
+                                        }
+
+
+
+
+                                    }
+
+
+                                } else {
+                                    log.error("Invalid affected version range: {}", affectedVersion);
+                                }
+                            }
+                    );
+
+
+
+
+
+
+                }
+        );
+
+        return affectedCVEs;
+
+
+
+
+    }
+
+
 }
