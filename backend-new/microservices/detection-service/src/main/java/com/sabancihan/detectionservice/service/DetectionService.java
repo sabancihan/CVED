@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class DetectionService implements CommandLineRunner {
+public class DetectionService   {
 
     private final StreamBridge streamBridge;
 
@@ -37,7 +37,7 @@ public class DetectionService implements CommandLineRunner {
     @Bean
     public Consumer<Message<DetectionRequestDTO>> detectionEventSupplier() {
         return message -> {
-            DetectionRequestDTO request =  message.getPayload();
+            DetectionRequestDTO request =  message.getPayload();;
 
             request.getVulnerabilities().forEach(
                     vulnerability -> {
@@ -46,7 +46,13 @@ public class DetectionService implements CommandLineRunner {
 
 
                         if (!vulnerabilities.isEmpty()) {
-                            streamBridge.send("notificationEventSupplier-out-0", MessageBuilder.withPayload(new VulnerabilityNotificationDTO(vulnerability.getVulnerabilityId())).build());
+                            log.info("Vulnerabilities found sending notification email");
+                            streamBridge.send("notificationEventSupplier-out-0", MessageBuilder.withPayload(VulnerabilityNotificationDTO.builder()
+                                    .ipAddress(request.getIpAddress())
+                                    .email(request.getEmail())
+                                    .softwareName(vulnerability.getSoftwareName())
+                                    .vulnerableIds(vulnerabilities)
+                            ).build());
                         }
                     }
             );

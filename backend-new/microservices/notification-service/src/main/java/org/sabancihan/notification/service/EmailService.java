@@ -58,8 +58,9 @@ public class EmailService {
     }
 
     public void sendEmail(VulnerabilityNotificationDTO vulnerabilityNotificationDTO) throws InterruptedException {
-        log.info("Sending Email notification for vulnerability - {}", vulnerabilityNotificationDTO.getId());
-        String emailText = String.format(Objects.requireNonNull(templateMessage.getText()),vulnerabilityNotificationDTO.getIpAddress() ,vulnerabilityNotificationDTO.getSoftwareName(), vulnerabilityNotificationDTO.getId());
+        String allIds = String.join(",",vulnerabilityNotificationDTO.getVulnerableIds());
+        log.info("Sending Email notification for vulnerability - {}", allIds);
+        String emailText = String.format(Objects.requireNonNull(templateMessage.getText()),vulnerabilityNotificationDTO.getIpAddress() ,vulnerabilityNotificationDTO.getSoftwareName(), allIds);
 
         sendSimpleMessage(new String[]{vulnerabilityNotificationDTO.getEmail()}, "Uygulamınızda Açık var", emailText);
 
