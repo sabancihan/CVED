@@ -1,1 +1,11 @@
+com\sabancihan\detectionservice\dto\DetectionRequestDTO$DetectionRequestDTOBuilder.class
+com\sabancihan\detectionservice\dto\DetectionSoftwareVulnerabilityDTO.class
+com\sabancihan\detectionservice\dto\DetectionVulnerabilityDTO$DetectionVulnerabilityDTOBuilder.class
 com\sabancihan\detectionservice\DetectionServiceApplication.class
+com\sabancihan\detectionservice\dto\VulnerabilityDTO.class
+com\sabancihan\detectionservice\dto\VulnerabilityNotificationDTO.class
+com\sabancihan\detectionservice\dto\DetectionRequestDTO.class
+com\sabancihan\detectionservice\dto\DetectionVulnerabilityDTO.class
+com\sabancihan\detectionservice\dto\DetectionSoftwareVulnerabilityDTO$DetectionSoftwareVulnerabilityDTOBuilder.class
+com\sabancihan\detectionservice\service\DetectionService.class
+com\sabancihan\detectionservice\dto\VulnerabilityNotificationDTO$VulnerabilityNotificationDTOBuilder.class

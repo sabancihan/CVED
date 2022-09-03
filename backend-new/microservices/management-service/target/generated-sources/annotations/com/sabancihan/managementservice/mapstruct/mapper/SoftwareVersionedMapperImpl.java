@@ -1,12 +1,16 @@
 package com.sabancihan.managementservice.mapstruct.mapper;
 
-import com.sabancihan.managementservice.mapstruct.dto.SoftwarePostRequestDTO;
+import com.sabancihan.managementservice.mapstruct.dto.SoftwareGetRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareResponseDTO;
+import com.sabancihan.managementservice.mapstruct.dto.SoftwareVersionedGetRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareVersionedPatchRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareVersionedPostRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareVersionedResponseDTO;
 import com.sabancihan.managementservice.model.Software;
+import com.sabancihan.managementservice.model.SoftwareId;
 import com.sabancihan.managementservice.model.SoftwareVersioned;
+import com.sabancihan.managementservice.service.ServerService;
+import com.sabancihan.managementservice.service.SoftwareService;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -15,14 +19,16 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-31T17:03:50+0300",
+    date = "2022-09-03T17:10:25+0300",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 18.0.2.1 (Oracle Corporation)"
 )
 @Component
 public class SoftwareVersionedMapperImpl implements SoftwareVersionedMapper {
 
     @Autowired
-    private ServerMapper serverMapper;
+    private SoftwareService softwareService;
+    @Autowired
+    private ServerService serverService;
 
     @Override
     public SoftwareVersionedResponseDTO softwareVersionedToSoftwareVersionedResponse(SoftwareVersioned softwareVersioned) {
@@ -60,11 +66,25 @@ public class SoftwareVersionedMapperImpl implements SoftwareVersionedMapper {
 
         SoftwareVersioned.SoftwareVersionedBuilder softwareVersioned = SoftwareVersioned.builder();
 
-        softwareVersioned.server( serverMapper.serverFromId( softwareVersionedPostRequestDTO.getServer() ) );
-        softwareVersioned.software( softwarePostRequestDTOToSoftware( softwareVersionedPostRequestDTO.getSoftware() ) );
+        softwareVersioned.server( serverService.getServerById( softwareVersionedPostRequestDTO.getServer() ) );
+        softwareVersioned.software( softwareService.findOrCreateSoftware( softwareVersionedPostRequestDTO.getSoftware() ) );
         softwareVersioned.version( softwareVersionedPostRequestDTO.getVersion() );
 
         return softwareVersioned.build();
+    }
+
+    @Override
+    public SoftwareVersionedGetRequestDTO softwareVersionedToSoftwareVersionedGetRequest(SoftwareVersioned softwareVersioned) {
+        if ( softwareVersioned == null ) {
+            return null;
+        }
+
+        SoftwareVersionedGetRequestDTO.SoftwareVersionedGetRequestDTOBuilder softwareVersionedGetRequestDTO = SoftwareVersionedGetRequestDTO.builder();
+
+        softwareVersionedGetRequestDTO.version( softwareVersioned.getVersion() );
+        softwareVersionedGetRequestDTO.software( softwareToSoftwareGetRequestDTO( softwareVersioned.getSoftware() ) );
+
+        return softwareVersionedGetRequestDTO.build();
     }
 
     @Override
@@ -79,6 +99,17 @@ public class SoftwareVersionedMapperImpl implements SoftwareVersionedMapper {
         }
 
         return list;
+    }
+
+    @Override
+    public SoftwareVersioned softwareIdToSoftwareVersioned(SoftwareId softwareId) {
+        if ( softwareId == null ) {
+            return null;
+        }
+
+        SoftwareVersioned.SoftwareVersionedBuilder softwareVersioned = SoftwareVersioned.builder();
+
+        return softwareVersioned.build();
     }
 
     @Override
@@ -104,15 +135,15 @@ public class SoftwareVersionedMapperImpl implements SoftwareVersionedMapper {
         return softwareResponseDTO.build();
     }
 
-    protected Software softwarePostRequestDTOToSoftware(SoftwarePostRequestDTO softwarePostRequestDTO) {
-        if ( softwarePostRequestDTO == null ) {
+    protected SoftwareGetRequestDTO softwareToSoftwareGetRequestDTO(Software software) {
+        if ( software == null ) {
             return null;
         }
 
-        Software.SoftwareBuilder software = Software.builder();
+        SoftwareGetRequestDTO.SoftwareGetRequestDTOBuilder softwareGetRequestDTO = SoftwareGetRequestDTO.builder();
 
-        software.id( softwarePostRequestDTO.getId() );
+        softwareGetRequestDTO.id( software.getId() );
 
-        return software.build();
+        return softwareGetRequestDTO.build();
     }
 }

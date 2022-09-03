@@ -42,6 +42,10 @@ public class SoftwareService {
     }
 
 
+    public Software findOrCreateSoftware(SoftwareId id) {
+        log.info("Getting software with id {}", id);
+        return softwareRepository.findById(id).orElseGet(() -> softwareRepository.save(new Software(id)));
+    }
 
 
 }

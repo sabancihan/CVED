@@ -1,4 +1,5 @@
 com\sabancihan\collectionservice\controller\VulnerabilityController.class
+com\sabancihan\collectionservice\dto\DetectionVulnerabiltiyDTO$DetectionVulnerabiltiyDTOBuilder.class
 com\sabancihan\collectionservice\collector\Requester$RestResponse.class
 com\sabancihan\collectionservice\mapper\VulnerabilityMapperImpl.class
 com\sabancihan\collectionservice\collector\VulnMapping$CVE_META.class
@@ -7,12 +8,18 @@ com\sabancihan\collectionservice\model\Vulnerability.class
 com\sabancihan\collectionservice\collector\VulnMapping$CVE.class
 com\sabancihan\collectionservice\dto\VulnerabilityResponse$VulnerabilityResponseBuilder.class
 com\sabancihan\collectionservice\CollectionServiceApplication.class
+com\sabancihan\collectionservice\dto\DetectionVulnerabiltiyDTO.class
 com\sabancihan\collectionservice\model\Vulnerability$VulnerabilityBuilder.class
 com\sabancihan\collectionservice\service\VulnerabilityService.class
+com\sabancihan\collectionservice\dto\DetectionRequestDTO$DetectionRequestDTOBuilder.class
+com\sabancihan\collectionservice\dto\SoftwareVulnerabilityDTO.class
 com\sabancihan\collectionservice\collector\VulnMapping.class
+com\sabancihan\collectionservice\dto\DetectionRequestDTO.class
+com\sabancihan\collectionservice\dto\ManagementVulnerabilityDTO$ManagementVulnerabilityDTOBuilder.class
 com\sabancihan\collectionservice\collector\VulnMapping$CVEConfig.class
 com\sabancihan\collectionservice\collector\Storer.class
 com\sabancihan\collectionservice\collector\Parser.class
+com\sabancihan\collectionservice\dto\ManagementUpdateDTO$ManagementUpdateDTOBuilder.class
 com\sabancihan\collectionservice\collector\Requester.class
 com\sabancihan\collectionservice\collector\VulnMapping$CVE_ITEM.class
 com\sabancihan\collectionservice\collector\Downloader.class
@@ -20,9 +27,12 @@ com\sabancihan\collectionservice\collector\VulnMapping$CVENode.class
 com\sabancihan\collectionservice\model\DownloadLog.class
 com\sabancihan\collectionservice\collector\Listener.class
 com\sabancihan\collectionservice\collector\VulnMapping$CPEMatch.class
+com\sabancihan\collectionservice\dto\ManagementUpdateDTO.class
 com\sabancihan\collectionservice\model\DownloadLog$DownloadLogBuilder.class
 com\sabancihan\collectionservice\collector\Initializer.class
 com\sabancihan\collectionservice\repository\VulnerabilityRepository.class
+com\sabancihan\collectionservice\dto\ManagementVulnerabilityDTO.class
 com\sabancihan\collectionservice\dto\VulnerabilityResponse.class
 com\sabancihan\collectionservice\repository\DownloadLogRepository.class
+com\sabancihan\collectionservice\dto\SoftwareVulnerabilityDTO$SoftwareVulnerabilityDTOBuilder.class
 com\sabancihan\collectionservice\mapper\VulnerabilityMapper.class

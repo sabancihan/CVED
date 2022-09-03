@@ -11,6 +11,7 @@ C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-servi
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\repository\SoftwareVersionedRepository.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\repository\UserRepository.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\dto\SoftwarePostRequestDTO.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\dto\ManagementVulnerabilityDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\mapper\SoftwareMapper.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\repository\ServerRepository.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\ManagementServiceApplication.java
@@ -25,12 +26,14 @@ C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-servi
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\model\Server.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\service\SoftwareVersionedService.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\controller\SoftwareController.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\dto\ServerSummaryDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\dto\ServerResponseDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\Qualifiers.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\repository\SoftwareRepository.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\model\Software.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\service\ServerService.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\model\SoftwareVersioned.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\dto\ManagementUpdateDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\model\User.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\dto\SoftwareResponseDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\management-service\src\main\java\com\sabancihan\managementservice\mapstruct\mapper\SoftwareVersionedMapper.java

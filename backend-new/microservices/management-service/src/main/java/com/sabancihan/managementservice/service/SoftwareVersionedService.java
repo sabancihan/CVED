@@ -1,5 +1,6 @@
 package com.sabancihan.managementservice.service;
 
+import com.google.common.collect.Sets;
 import com.sabancihan.managementservice.mapstruct.dto.*;
 import com.sabancihan.managementservice.mapstruct.mapper.ServerMapper;
 import com.sabancihan.managementservice.mapstruct.mapper.SoftwareVersionedMapper;
@@ -8,6 +9,7 @@ import com.sabancihan.managementservice.model.Server;
 import com.sabancihan.managementservice.model.Software;
 import com.sabancihan.managementservice.model.SoftwareId;
 import com.sabancihan.managementservice.model.SoftwareVersioned;
+import com.sabancihan.managementservice.repository.ServerRepository;
 import com.sabancihan.managementservice.repository.SoftwareRepository;
 import com.sabancihan.managementservice.repository.SoftwareVersionedRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +19,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -35,6 +34,8 @@ public class SoftwareVersionedService {
     private final ServerMapper serverMapper;
 
     private final SoftwareVersionedRepository softwareVersionedRepository;
+
+    private final ServerRepository serverRepository;
 
     private final SoftwareRepository softwareRepository;
     private final SoftwareVersionedMapper softwareVersionedMapper;
@@ -59,18 +60,39 @@ public class SoftwareVersionedService {
 
 
     public SoftwareVersionedResponseDTO createSoftwareVersioned(SoftwareVersionedPostRequestDTO softwareVersionedPostRequestDTO) {
+
+
         log.info("Creating software versioned");
 
-        SoftwareVersioned softwareVersioned = softwareVersionedMapper.softwareVersionedPostRequestDTOToSoftwareVersioned(softwareVersionedPostRequestDTO);
-        Software software = softwareVersioned.getSoftware();
+        SoftwareId softwareId = softwareVersionedPostRequestDTO.getSoftware();
+
+        Software software = softwareRepository.findById(softwareId).orElse(softwareRepository.save(Software.builder().id(softwareId).softwareVersions(new HashSet<>()).build()));
+
+        Server server = serverRepository.findById(softwareVersionedPostRequestDTO.getServer()).orElseThrow(() -> new IllegalArgumentException("Server not found"));
 
 
-        Server server = softwareVersioned.getServer();
 
-        var message = ManagementCollectionMessageDTO.builder()
-                .user(userMapper.userToUserResponse(server.getUser()))
-                .server(serverMapper.serverToServerSummary(server))
-                .softwareVersioned(Collections.singletonList(softwareVersionedMapper.softwareVersionedToSoftwareVersionedGetRequest(softwareVersioned)))
+
+        SoftwareVersioned  softwareVersioned = SoftwareVersioned.builder()
+                .id(UUID.randomUUID())
+                .version(softwareVersionedPostRequestDTO.getVersion())
+                .software(software)
+                .server(server)
+                .build();
+
+
+        SoftwareVersioned savedSoftwareVersioned = softwareVersionedRepository.save(softwareVersioned);
+
+        software.getSoftwareVersions().addAll(Sets.newHashSet(savedSoftwareVersioned));
+
+        var message = ManagementUpdateDTO.builder()
+                .email(server.getUser().getEmail())
+                .ipAddress(server.getIpAddress())
+                .vulnerabilities(Collections.singletonList(ManagementVulnerabilityDTO.builder()
+                                .softwareName(software.getId().getProduct_name())
+                                .vendorName(software.getId().getVendor_name())
+                                .version(softwareVersioned.getVersion())
+                        .build()))
                 .build();
 
 
@@ -81,8 +103,7 @@ public class SoftwareVersionedService {
 
 
 
-        softwareVersioned.setSoftware(softwareRepository.findById(software.getId()).orElse(softwareRepository.save(software)));
-        return softwareVersionedMapper.softwareVersionedToSoftwareVersionedResponse(softwareVersionedRepository.save(softwareVersioned));
+        return softwareVersionedMapper.softwareVersionedToSoftwareVersionedResponse(softwareVersioned);
     }
 
 

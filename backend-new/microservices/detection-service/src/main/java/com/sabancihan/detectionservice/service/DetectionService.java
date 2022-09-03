@@ -39,9 +39,11 @@ public class DetectionService   {
         return message -> {
             DetectionRequestDTO request =  message.getPayload();;
 
+            log.info("Detection request received {}", request);
+
             request.getVulnerabilities().forEach(
                     vulnerability -> {
-                        var vulnerabilities = detectVulnerability(vulnerability.getUsedVersion(),vulnerability.getAffectedVersions());
+                        var vulnerabilities = detectVulnerability(vulnerability.getUsedVersion(),vulnerability.getAffected_versions());
 
 
 
@@ -52,6 +54,7 @@ public class DetectionService   {
                                     .email(request.getEmail())
                                     .softwareName(vulnerability.getSoftwareName())
                                     .vulnerableIds(vulnerabilities)
+                                    .build()
                             ).build());
                         }
                     }
@@ -74,7 +77,7 @@ public class DetectionService   {
 
                     String id = detectionSoftwareVulnerabilityDTO.getId();
 
-                    detectionSoftwareVulnerabilityDTO.getAffectedVersions().forEach(
+                    detectionSoftwareVulnerabilityDTO.getAffected_versions().forEach(
                             affectedVersion -> {
                                 var versionRange = affectedVersion.split(":");
                                 if (versionRange.length == 2) {

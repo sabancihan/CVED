@@ -5,12 +5,17 @@ C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-servi
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\Parser.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\Requester.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\Storer.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\dto\DetectionVulnerabiltiyDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\Listener.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\dto\SoftwareVulnerabilityDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\Initializer.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\Downloader.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\controller\VulnerabilityController.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\dto\ManagementUpdateDTO.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\dto\DetectionRequestDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\service\VulnerabilityService.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\collector\VulnMapping.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\model\DownloadLog.java
+C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\dto\ManagementVulnerabilityDTO.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\CollectionServiceApplication.java
 C:\Users\LENOVO\Documents\GitHub\CVED\backend-new\microservices\collection-service\src\main\java\com\sabancihan\collectionservice\model\Vulnerability.java

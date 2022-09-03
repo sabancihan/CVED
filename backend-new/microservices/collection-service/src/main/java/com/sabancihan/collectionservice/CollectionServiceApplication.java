@@ -2,6 +2,7 @@ package com.sabancihan.collectionservice;
 
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,14 +32,12 @@ public class CollectionServiceApplication {
     }
 
 
+
     @Bean
-    public Consumer<Message<Object>> managementUpdateEventSupplier() {
-        return message -> {
-            try {
-                log.info("Received message: {}", message.getPayload());
-            } catch (Exception e) {
-                throw new RuntimeException("Something went wrong while receiving data");
-            }
-        };
+    public PreparedStatement preparedStatement(CqlSession session) {
+        final String selectStatement = "SELECT id,affected_versions FROM vulnerability WHERE vendor_name = ? AND software_name = ?";
+        return session.prepare(selectStatement);
     }
+
+
 }

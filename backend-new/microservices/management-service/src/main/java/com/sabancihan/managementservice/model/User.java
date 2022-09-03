@@ -25,6 +25,10 @@ public class User {
     private String username;
 
 
+    @Column(nullable = false)
+    private String email;
+
+
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Server> servers;

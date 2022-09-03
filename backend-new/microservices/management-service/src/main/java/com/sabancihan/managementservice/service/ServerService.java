@@ -44,9 +44,13 @@ public class ServerService {
         return  serverMapper.serversToServerResponses(serverRepository.findAllByUser_Username(username));
     }
 
-    public ServerResponseDTO getServerById(UUID id) {
+    public ServerResponseDTO getServerResponseById(UUID id) {
+        return serverMapper.serverToServerResponse(getServerById(id));
+    }
+
+    public Server getServerById(UUID id) {
         log.info("Getting server with id {}", id);
-        return serverMapper.serverToServerResponse(serverRepository.findById(id).orElseThrow(() ->  new RuntimeException("Server not found")));
+        return serverRepository.findById(id).orElseThrow(() ->  new RuntimeException("Server not found"));
     }
 
     public List<ServerResponseDTO> getAllServers() {
@@ -105,17 +109,14 @@ public class ServerService {
 
 
 
-            ManagementCollectionMessageDTO message =  ManagementCollectionMessageDTO.builder()
-                    .user(userMapper.userToUserResponse(server.getUser()))
-                    .server(serverMapper.serverToServerSummary(server))
-                    .softwareVersioned(softwareSet.stream().map(
-                            softwareVersioned -> SoftwareVersionedGetRequestDTO.builder()
-                                    .version(softwareVersioned.getVersion())
-                                    .software(SoftwareGetRequestDTO.builder()
-                                            .id(softwareVersioned.getSoftware().getId())
-                                            .build())
-                                    .build()
-                    ).collect(Collectors.toList()))
+            ManagementUpdateDTO message =  ManagementUpdateDTO.builder()
+                    .email(server.getUser().getEmail())
+                    .ipAddress(server.getIpAddress())
+                    .vulnerabilities(server.getSoftware().stream().map(softwareVersioned -> ManagementVulnerabilityDTO.builder()
+                            .softwareName(softwareVersioned.getSoftware().getId().getProduct_name())
+                            .vendorName(softwareVersioned.getSoftware().getId().getVendor_name())
+                            .version(softwareVersioned.getVersion())
+                            .build()).collect(Collectors.toList()))
 
                     .build();
 

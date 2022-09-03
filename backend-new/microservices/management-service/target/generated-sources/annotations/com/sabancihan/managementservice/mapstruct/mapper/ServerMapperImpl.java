@@ -4,6 +4,7 @@ import com.sabancihan.managementservice.mapstruct.dto.ServerPatchRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.ServerPostRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.ServerResponseDTO;
 import com.sabancihan.managementservice.mapstruct.dto.ServerSoftwarePostRequestDTO;
+import com.sabancihan.managementservice.mapstruct.dto.ServerSummaryDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwarePostRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareResponseDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareVersionedResponseDTO;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-08-31T17:03:50+0300",
+    date = "2022-09-03T17:10:24+0300",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 18.0.2.1 (Oracle Corporation)"
 )
 @Component
@@ -32,6 +33,8 @@ public class ServerMapperImpl implements ServerMapper {
     private JsonNullableMapper jsonNullableMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ServerResponseDTO serverToServerResponse(Server server) {
@@ -96,6 +99,21 @@ public class ServerMapperImpl implements ServerMapper {
         server.disk( serverResponseDTO.getDisk() );
 
         return server.build();
+    }
+
+    @Override
+    public ServerSummaryDTO serverToServerSummary(Server server) {
+        if ( server == null ) {
+            return null;
+        }
+
+        ServerSummaryDTO.ServerSummaryDTOBuilder serverSummaryDTO = ServerSummaryDTO.builder();
+
+        serverSummaryDTO.ipAddress( server.getIpAddress() );
+        serverSummaryDTO.port( server.getPort() );
+        serverSummaryDTO.user( userMapper.userToUserResponse( server.getUser() ) );
+
+        return serverSummaryDTO.build();
     }
 
     @Override

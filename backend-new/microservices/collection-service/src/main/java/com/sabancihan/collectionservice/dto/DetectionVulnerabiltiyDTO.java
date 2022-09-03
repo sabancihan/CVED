@@ -22,7 +22,7 @@ public class DetectionVulnerabiltiyDTO {
     private String vendorName;
 
     @NotNull
-    private List<SoftwareVulnerabilityDTO> affectedVersions;
+    private List<SoftwareVulnerabilityDTO> affected_versions;
 
     @NotNull
     private String usedVersion;

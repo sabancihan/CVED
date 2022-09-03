@@ -14,7 +14,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(uses = {JsonNullableMapper.class, SoftwareId.class, SoftwareService.class, ServerService.class,ServerMapper.class},componentModel = "spring",nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(uses = {JsonNullableMapper.class, SoftwareId.class, SoftwareService.class, ServerService.class},componentModel = "spring",nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface SoftwareVersionedMapper {
 
 
@@ -30,6 +30,8 @@ public interface SoftwareVersionedMapper {
 
     List<SoftwareVersionedResponseDTO> softwareVersionedListToSoftwareVersionedResponses(List<SoftwareVersioned> softwareVersionedList);
 
+
+    SoftwareVersioned softwareIdToSoftwareVersioned(SoftwareId softwareId);
 
 
     @InheritConfiguration(name = "softwareVersionedPatchRequestDTOToSoftwareVersioned")

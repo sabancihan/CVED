@@ -1,10 +1,13 @@
 com\sabancihan\managementservice\service\ServerService.class
+com\sabancihan\managementservice\mapstruct\dto\ManagementUpdateDTO.class
 com\sabancihan\managementservice\model\Server$ServerBuilder.class
 com\sabancihan\managementservice\model\Software.class
 com\sabancihan\managementservice\mapstruct\dto\ServerPostRequestDTO$ServerPostRequestDTOBuilder.class
 com\sabancihan\managementservice\mapstruct\dto\SoftwarePostRequestDTO$SoftwarePostRequestDTOBuilder.class
 com\sabancihan\managementservice\mapstruct\dto\SoftwareResponseDTO$SoftwareResponseDTOBuilder.class
 com\sabancihan\managementservice\controller\SoftwareController.class
+com\sabancihan\managementservice\mapstruct\dto\ServerSummaryDTO$ServerSummaryDTOBuilder.class
+com\sabancihan\managementservice\mapstruct\dto\ServerSummaryDTO.class
 com\sabancihan\managementservice\mapstruct\dto\SoftwareResponseDTO.class
 com\sabancihan\managementservice\model\SoftwareVersioned.class
 com\sabancihan\managementservice\mapstruct\dto\ServerSoftwarePostRequestDTO$ServerSoftwarePostRequestDTOBuilder.class
@@ -15,8 +18,10 @@ com\sabancihan\managementservice\mapstruct\dto\SoftwareVersionedPatchRequestDTO.
 com\sabancihan\managementservice\mapstruct\mapper\SoftwareVersionedMapperImpl.class
 com\sabancihan\managementservice\mapstruct\mapper\SoftwareVersionedMapper.class
 com\sabancihan\managementservice\mapstruct\mapper\UserMapperImpl.class
+com\sabancihan\managementservice\mapstruct\dto\ManagementVulnerabilityDTO$ManagementVulnerabilityDTOBuilder.class
 com\sabancihan\managementservice\mapstruct\dto\SoftwareVersionedPostRequestDTO.class
 com\sabancihan\managementservice\mapstruct\mapper\UserMapper.class
+com\sabancihan\managementservice\mapstruct\dto\ManagementVulnerabilityDTO.class
 com\sabancihan\managementservice\mapstruct\dto\SoftwareVersionedResponseDTO$SoftwareVersionedResponseDTOBuilder.class
 com\sabancihan\managementservice\mapstruct\dto\UserResponseDTO.class
 com\sabancihan\managementservice\ManagementServiceApplication.class
@@ -39,6 +44,7 @@ com\sabancihan\managementservice\mapstruct\mapper\SoftwareMapper.class
 com\sabancihan\managementservice\mapstruct\dto\ServerPatchRequestDTO$ServerPatchRequestDTOBuilder.class
 com\sabancihan\managementservice\mapstruct\mapper\ServerMapper.class
 com\sabancihan\managementservice\service\SoftwareService.class
+com\sabancihan\managementservice\mapstruct\dto\ManagementUpdateDTO$ManagementUpdateDTOBuilder.class
 com\sabancihan\managementservice\mapstruct\dto\SoftwareVersionedResponseDTO.class
 com\sabancihan\managementservice\controller\SoftwareVersionedController.class
 com\sabancihan\managementservice\mapstruct\mapper\SoftwareMapperImpl.class

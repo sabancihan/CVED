@@ -34,13 +34,8 @@ public class EmailService {
             }
         };
     }
-    @Bean
-    public SimpleMailMessage sprintTemplateMessage() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setText(
-                "Dikkat:\n%s ipli serverinizdeki %s uygulamasında %s açığı bulunmuştur\n");
-        return message;
-    }
+
+
 
     @Value("${spring.mail.username}")
     private  String username;
