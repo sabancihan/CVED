@@ -121,16 +121,19 @@ public class SoftwareVersionedService {
         return softwareVersionedMapper.softwareVersionedListToSoftwareVersionedResponses(softwareVersionedRepository.findAllByServer_id(serverId));
     }
 
+    public List<ManagementUpdateDTO> getAllGrouped() {
+        log.info("Getting all grouped software versioned");
+        return groupListByServer(softwareVersionedRepository.findAll());
+    }
 
-    public List<ManagementUpdateDTO> getAllSoftwareVersionedBySoftwareIds (Set<SoftwareId> ids) {
-        List<SoftwareVersioned> softwareVersionedList = softwareVersionedRepository.findAllBySoftware_idIn(ids);
 
 
+    private List<ManagementUpdateDTO> groupListByServer(List<SoftwareVersioned> softwareVersionedList) {
         if (softwareVersionedList.isEmpty()) {
             return null;
         }
 
-       var groupServer =  softwareVersionedList.stream().collect(Collectors.groupingBy(
+        var groupServer =  softwareVersionedList.stream().collect(Collectors.groupingBy(
                 SoftwareVersioned::getServer
         ));
 
@@ -145,7 +148,13 @@ public class SoftwareVersionedService {
                         ).toList())
                         .build()
         ).collect(Collectors.toList());
+    }
 
+    public List<ManagementUpdateDTO> getAllSoftwareVersionedBySoftwareIds (Set<SoftwareId> ids) {
+        List<SoftwareVersioned> softwareVersionedList = softwareVersionedRepository.findAllBySoftware_idIn(ids);
+
+
+        return groupListByServer(softwareVersionedList);
 
 
     }

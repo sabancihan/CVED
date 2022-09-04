@@ -51,6 +51,11 @@ public class SoftwareVersionedController {
         return softwareVersionedService.getAllSoftwareVersionedBySoftwareIds(softwareIds);
     }
 
+    @GetMapping("/grouped")
+    public List<ManagementUpdateDTO> getAllSoftwareGrouped() {
+        return softwareVersionedService.getAllGrouped();
+    }
+
 
 
 }

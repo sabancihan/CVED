@@ -5,6 +5,7 @@ import com.sabancihan.collectionservice.model.DownloadLog;
 import com.sabancihan.collectionservice.model.Vulnerability;
 import com.sabancihan.collectionservice.repository.DownloadLogRepository;
 import com.sabancihan.collectionservice.repository.VulnerabilityRepository;
+import com.sabancihan.collectionservice.service.VulnerabilityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -46,6 +47,8 @@ public class Initializer implements CommandLineRunner {
     private final DownloadLogRepository downloadLogRepository;
 
 
+    private final VulnerabilityService vulnerabilityService;
+
     public ZonedDateTime initialize() {
 
         ZonedDateTime lastModified = ZonedDateTime.now();
@@ -83,6 +86,8 @@ public class Initializer implements CommandLineRunner {
                             .time(Uuids.startOf(lastModified.toInstant().toEpochMilli()))
 
                             .build());
+
+            vulnerabilityService.handleInitUpdates();
 
 
         } catch (InterruptedException | ExecutionException e) {

@@ -218,6 +218,9 @@ public class Requester {
         }
     }
 
+    public void handleInitializeRequest() {
+    }
+
 
 
 
