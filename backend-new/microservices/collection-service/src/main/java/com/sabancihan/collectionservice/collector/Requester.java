@@ -3,13 +3,22 @@ package com.sabancihan.collectionservice.collector;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sabancihan.collectionservice.dto.*;
+import com.sabancihan.collectionservice.mapper.VulnerabilityMapper;
 import com.sabancihan.collectionservice.model.DownloadLog;
+import com.sabancihan.collectionservice.model.Vulnerability;
 import com.sabancihan.collectionservice.repository.DownloadLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +34,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -45,12 +55,16 @@ public class Requester {
     private  String apiKey;
 
 
+    private final StreamBridge streamBridge;
+
 
     private final ObjectMapper objectMapper;
 
+    private final WebClient.Builder webClientBuilder;
     private final DownloadLogRepository downloadLogRepository;
 
 
+    private final VulnerabilityMapper vulnerabilityMapper;
     private final Parser parser;
     private final Storer storer;
 
@@ -131,7 +145,13 @@ public class Requester {
         var vulnMapping = getRestRequest(lastModified);
         if (vulnMapping != null) {
 
-            vulnMapping.stream().map(parser::parse).forEach(storer::store);
+            var vulnList =  vulnMapping.stream().map(parser::parse).toList();
+            vulnList.forEach(storer::store);
+
+
+
+
+
 
 
 
@@ -141,6 +161,52 @@ public class Requester {
                             .id(UUID.randomUUID().toString())
                             .date(now.toLocalDateTime())
                             .build());
+
+            //flatting the list
+            var vulnListFlat = vulnList.stream().flatMap(Collection::stream).collect(Collectors.groupingBy(
+                    Vulnerability::getVendorName,Collectors.groupingBy(Vulnerability::getSoftwareName)
+            ));
+
+            List<SoftwareId> uniqueIds = vulnListFlat.keySet().stream().flatMap(vendorName -> {
+                var softwareNames = vulnListFlat.get(vendorName).keySet();
+                return softwareNames.stream().map(softwareName -> SoftwareId.builder()
+                        .vendor_name(vendorName)
+                        .software_name(softwareName)
+                        .build());
+
+            }).toList();
+
+            List<ManagementUpdateDTO> managementUpdateDTOs = webClientBuilder.build()
+                    .post()
+                    .uri("http://management-service/api/management/software/ids")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(uniqueIds))
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<ManagementUpdateDTO>>() {
+                    })
+                    .block();
+
+
+            assert managementUpdateDTOs != null;
+            managementUpdateDTOs.forEach(managementUpdateDTO -> {
+                streamBridge.send("detectionEventSupplier-out-0", MessageBuilder.withPayload(
+
+                        DetectionRequestDTO.builder()
+                                .email(managementUpdateDTO.getEmail())
+                                .ipAddress(managementUpdateDTO.getIpAddress())
+                                .vulnerabilities(managementUpdateDTO.getVulnerabilities().stream().map(
+                                        vulnerability -> DetectionVulnerabiltiyDTO.builder()
+                                                .vendorName(vulnerability.getVendorName())
+                                                .softwareName(vulnerability.getSoftwareName())
+                                                .usedVersion(vulnerability.getVersion())
+                                                .affected_versions(vulnListFlat.get(vulnerability.getVendorName()).get(vulnerability.getSoftwareName()).stream().map(
+                                                        vulnerabilityMapper::vulnerabilityToSoftwareVulnerabilityDTO
+                                                ).toList())
+                                                .build()
+                                ).toList())
+                                .build()));            });
+
+
         }
     }
 

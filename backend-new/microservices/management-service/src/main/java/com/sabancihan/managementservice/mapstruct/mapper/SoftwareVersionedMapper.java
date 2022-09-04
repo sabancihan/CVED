@@ -31,6 +31,11 @@ public interface SoftwareVersionedMapper {
     List<SoftwareVersionedResponseDTO> softwareVersionedListToSoftwareVersionedResponses(List<SoftwareVersioned> softwareVersionedList);
 
 
+
+    ManagementVulnerabilityDTO softwareVersionedToManagementVulnerabilityDTO(SoftwareVersioned softwareVersioned);
+
+    List<ManagementVulnerabilityDTO> softwareVersionedListToManagementVulnerabilityDTOList(List<SoftwareVersioned> softwareVersionedList);
+
     SoftwareVersioned softwareIdToSoftwareVersioned(SoftwareId softwareId);
 
 

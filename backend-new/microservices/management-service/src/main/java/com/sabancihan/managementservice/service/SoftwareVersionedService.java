@@ -15,11 +15,15 @@ import com.sabancihan.managementservice.repository.SoftwareVersionedRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Bean;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -115,5 +119,32 @@ public class SoftwareVersionedService {
     public List<SoftwareVersionedResponseDTO> getAllSoftwareVersionedByServerId(UUID serverId) {
         log.info("Getting all software versioned by server id {}", serverId);
         return softwareVersionedMapper.softwareVersionedListToSoftwareVersionedResponses(softwareVersionedRepository.findAllByServer_id(serverId));
+    }
+
+
+    public List<ManagementUpdateDTO> getAllSoftwareVersionedBySoftwareIds (Set<SoftwareId> ids) {
+        List<SoftwareVersioned> softwareVersionedList = softwareVersionedRepository.findAllBySoftware_idIn(ids);
+
+
+        if (softwareVersionedList.isEmpty()) {
+            return null;
+        }
+
+       var groupServer =  softwareVersionedList.stream().collect(Collectors.groupingBy(
+                SoftwareVersioned::getServer
+        ));
+
+        return  groupServer.keySet().stream().map(
+                server -> ManagementUpdateDTO.builder()
+                        .email(server.getUser().getEmail())
+                        .ipAddress(server.getIpAddress())
+                        .vulnerabilities(groupServer.get(server).stream().map(
+                                softwareVersionedMapper::softwareVersionedToManagementVulnerabilityDTO
+                        ).toList())
+                        .build()
+        ).collect(Collectors.toList());
+
+
+
     }
 }

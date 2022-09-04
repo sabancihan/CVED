@@ -15,6 +15,16 @@ import java.util.UUID;
 @Getter
 @Setter
 @Cacheable
+
+@NamedEntityGraph(name = "SoftwareVersioned.withDetailedServer", attributeNodes =
+        @NamedAttributeNode(value = "server", subgraph = "SoftwareVersioned.WithDetailedServer.Server"),
+        subgraphs = @NamedSubgraph(name = "SoftwareVersioned.WithDetailedServer.Server", attributeNodes = {
+                @NamedAttributeNode("ipAddress"),
+                @NamedAttributeNode("port"),
+                @NamedAttributeNode("user")
+        })
+)
+
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class SoftwareVersioned {
 

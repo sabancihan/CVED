@@ -1,12 +1,14 @@
 package com.sabancihan.managementservice.controller;
 
 import com.sabancihan.managementservice.mapstruct.dto.*;
+import com.sabancihan.managementservice.model.SoftwareId;
 import com.sabancihan.managementservice.service.ServerService;
 import com.sabancihan.managementservice.service.SoftwareVersionedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -42,6 +44,11 @@ public class SoftwareVersionedController {
     @PatchMapping("{id}")
     public SoftwareVersionedResponseDTO updateServer(@PathVariable UUID id, @RequestBody SoftwareVersionedPatchRequestDTO softwareVersionedPatchRequestDTO) {
         return softwareVersionedService.updateSoftwareVersioned(id, softwareVersionedPatchRequestDTO);
+    }
+
+    @PostMapping("/software/ids")
+    public List<ManagementUpdateDTO> getAllSoftwareVersionedBySoftwareIds(@RequestBody Set<SoftwareId> softwareIds) {
+        return softwareVersionedService.getAllSoftwareVersionedBySoftwareIds(softwareIds);
     }
 
 
