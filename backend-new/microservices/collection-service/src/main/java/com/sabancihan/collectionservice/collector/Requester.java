@@ -1,6 +1,7 @@
 package com.sabancihan.collectionservice.collector;
 
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sabancihan.collectionservice.dto.*;
@@ -17,6 +18,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Transactional
 
 public class Requester {
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -154,12 +157,10 @@ public class Requester {
 
 
 
-
             log.info("Vulnerabilities from rest api downloaded and saved");
             downloadLogRepository.insert(
                     DownloadLog.builder()
-                            .id(UUID.randomUUID().toString())
-                            .date(now.toLocalDateTime())
+                            .time(Uuids.timeBased())
                             .build());
 
             //flatting the list
@@ -171,14 +172,18 @@ public class Requester {
                 var softwareNames = vulnListFlat.get(vendorName).keySet();
                 return softwareNames.stream().map(softwareName -> SoftwareId.builder()
                         .vendor_name(vendorName)
-                        .software_name(softwareName)
+                        .product_name(softwareName)
                         .build());
 
             }).toList();
 
+            if (uniqueIds.size()  == 0) {
+                return;
+            }
+
             List<ManagementUpdateDTO> managementUpdateDTOs = webClientBuilder.build()
                     .post()
-                    .uri("http://management-service/api/management/software/ids")
+                    .uri("http://management-service/api/management/softwareVersioned/software/ids")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(BodyInserters.fromValue(uniqueIds))
                     .retrieve()
@@ -186,8 +191,11 @@ public class Requester {
                     })
                     .block();
 
+            if (managementUpdateDTOs == null || managementUpdateDTOs.size() == 0) {
+                return;
+            }
 
-            assert managementUpdateDTOs != null;
+
             managementUpdateDTOs.forEach(managementUpdateDTO -> {
                 streamBridge.send("detectionEventSupplier-out-0", MessageBuilder.withPayload(
 

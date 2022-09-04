@@ -1,5 +1,6 @@
 package com.sabancihan.managementservice.mapstruct.mapper;
 
+import com.sabancihan.managementservice.mapstruct.dto.ManagementVulnerabilityDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareGetRequestDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareResponseDTO;
 import com.sabancihan.managementservice.mapstruct.dto.SoftwareVersionedGetRequestDTO;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-03T17:10:25+0300",
+    date = "2022-09-04T16:54:49+0300",
     comments = "version: 1.5.2.Final, compiler: javac, environment: Java 18.0.2.1 (Oracle Corporation)"
 )
 @Component
@@ -96,6 +97,35 @@ public class SoftwareVersionedMapperImpl implements SoftwareVersionedMapper {
         List<SoftwareVersionedResponseDTO> list = new ArrayList<SoftwareVersionedResponseDTO>( softwareVersionedList.size() );
         for ( SoftwareVersioned softwareVersioned : softwareVersionedList ) {
             list.add( softwareVersionedToSoftwareVersionedResponse( softwareVersioned ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public ManagementVulnerabilityDTO softwareVersionedToManagementVulnerabilityDTO(SoftwareVersioned softwareVersioned) {
+        if ( softwareVersioned == null ) {
+            return null;
+        }
+
+        ManagementVulnerabilityDTO.ManagementVulnerabilityDTOBuilder managementVulnerabilityDTO = ManagementVulnerabilityDTO.builder();
+
+        managementVulnerabilityDTO.softwareName( getSoftwareName( softwareVersioned.getSoftware() ) );
+        managementVulnerabilityDTO.vendorName( getVendorName( softwareVersioned.getSoftware() ) );
+        managementVulnerabilityDTO.version( softwareVersioned.getVersion() );
+
+        return managementVulnerabilityDTO.build();
+    }
+
+    @Override
+    public List<ManagementVulnerabilityDTO> softwareVersionedListToManagementVulnerabilityDTOList(List<SoftwareVersioned> softwareVersionedList) {
+        if ( softwareVersionedList == null ) {
+            return null;
+        }
+
+        List<ManagementVulnerabilityDTO> list = new ArrayList<ManagementVulnerabilityDTO>( softwareVersionedList.size() );
+        for ( SoftwareVersioned softwareVersioned : softwareVersionedList ) {
+            list.add( softwareVersionedToManagementVulnerabilityDTO( softwareVersioned ) );
         }
 
         return list;

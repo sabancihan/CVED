@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SoftwareId {
-    String vendor_name;
-    String software_name;
+    private String vendor_name;
+    private String product_name;
 }

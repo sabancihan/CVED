@@ -134,6 +134,8 @@ public class SoftwareVersionedService {
                 SoftwareVersioned::getServer
         ));
 
+
+
         return  groupServer.keySet().stream().map(
                 server -> ManagementUpdateDTO.builder()
                         .email(server.getUser().getEmail())

@@ -1,5 +1,6 @@
 package com.sabancihan.collectionservice.collector;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.sabancihan.collectionservice.model.DownloadLog;
 import com.sabancihan.collectionservice.repository.DownloadLogRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Component;
 
 
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -34,14 +37,18 @@ public class Listener {
 
 
             taskScheduler.scheduleAtFixedRate(() -> {
-                Optional<DownloadLog> lastDownloadLog = downloadLogRepository.findTopBy();
+                Optional<DownloadLog> lastDownloadLog = downloadLogRepository.findTopByOrderByTimeDesc();
 
                 lastDownloadLog.ifPresent(downloadLog -> {
 
                     try {
                         log.info("Scheduled task started");
 
-                        requester.handleRestRequest(downloadLog.getDate().atZone(ZoneId.systemDefault()));
+                        long timeStamp =  Uuids.unixTimestamp(downloadLog.getTime());
+
+
+
+                        requester.handleRestRequest(ZonedDateTime.ofInstant(Instant.ofEpochMilli(timeStamp), ZoneId.systemDefault()));
 
                         log.info("Scheduled task finished");
 

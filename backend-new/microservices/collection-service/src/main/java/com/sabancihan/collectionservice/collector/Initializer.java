@@ -1,5 +1,6 @@
 package com.sabancihan.collectionservice.collector;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.sabancihan.collectionservice.model.DownloadLog;
 import com.sabancihan.collectionservice.model.Vulnerability;
 import com.sabancihan.collectionservice.repository.DownloadLogRepository;
@@ -79,8 +80,7 @@ public class Initializer implements CommandLineRunner {
             downloadLogRepository.insert(
 
                     DownloadLog.builder()
-                            .id(UUID.randomUUID().toString())
-                            .date(lastModified.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime())
+                            .time(Uuids.startOf(lastModified.toInstant().toEpochMilli()))
 
                             .build());
 
@@ -95,11 +95,14 @@ public class Initializer implements CommandLineRunner {
 
     public ZonedDateTime handleInitialized() {
 
-        Optional<DownloadLog>  lastUpdate = downloadLogRepository.findTopBy();
+        Optional<DownloadLog>  lastUpdate = downloadLogRepository.findTopByOrderByTimeDesc();
 
         if (lastUpdate.isPresent()) {
             log.info("Database is already initialized");
-            return lastUpdate.get().getDate().atZone(ZoneId.systemDefault());
+            long timeStamp =  Uuids.unixTimestamp(lastUpdate.get().getTime());
+
+            return ZonedDateTime.ofInstant(Instant.ofEpochSecond(timeStamp), ZoneId.systemDefault());
+
         }
 
         else {

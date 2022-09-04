@@ -1,5 +1,6 @@
 package com.sabancihan.collectionservice.model;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.springframework.data.cassandra.core.mapping.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Table
 @AllArgsConstructor
@@ -19,10 +21,15 @@ import java.time.ZonedDateTime;
 
 public class DownloadLog {
 
-    @PrimaryKeyColumn(name = "id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private String id;
 
-    @PrimaryKeyColumn(name = "date", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
-    private LocalDateTime date;
+    @PrimaryKey
+    private UUID time;
+
+
+
+
+
+
+
 
 }

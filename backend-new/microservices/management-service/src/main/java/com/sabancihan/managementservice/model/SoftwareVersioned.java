@@ -45,8 +45,8 @@ public class SoftwareVersioned {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "software_vendor",nullable = false)
     @JoinColumn(name = "software_name",nullable = false)
+    @JoinColumn(name = "software_vendor",nullable = false)
     private Software software;
 
 

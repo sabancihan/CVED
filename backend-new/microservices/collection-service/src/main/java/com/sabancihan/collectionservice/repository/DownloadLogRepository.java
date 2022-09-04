@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface DownloadLogRepository extends CassandraRepository<DownloadLog, String> {
 
 
-    Optional<DownloadLog> findTopBy();
+    Optional<DownloadLog> findTopByOrderByTimeDesc();
 }
