@@ -1,0 +1,4 @@
+org\sabancihan\notification\service\EmailService.class
+org\sabancihan\notification\service\VulnerabilityNotificationDTO$VulnerabilityNotificationDTOBuilder.class
+org\sabancihan\notification\service\VulnerabilityNotificationDTO.class
+org\sabancihan\notification\service\NotificationServiceApplication.class
