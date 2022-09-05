@@ -27,6 +27,7 @@ import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.authentication.PasswordComparisonAuthenticator;
 import org.springframework.security.ldap.userdetails.InetOrgPersonContextMapper;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;

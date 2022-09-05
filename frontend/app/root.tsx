@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import { createCookie, MetaFunction } from "@remix-run/node";
 
 import {
   Links,
@@ -22,6 +22,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
+ 
+
   return (
     <html lang="en">
       <head>
