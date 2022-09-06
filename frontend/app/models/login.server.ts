@@ -33,14 +33,15 @@ export async function register(information: Register ) : Promise<boolean | void>
 
 
 
+    
 
 
 
      return await axios.post(config.apiBaseUrl + "register", information ,  {
         headers: {
-            'X-XSRF-TOKEN': '9992fdd4-3dbb-4e1a-a4c5-e54ae6f6d1da', 
+            'X-XSRF-TOKEN': `${information._csrf}`, 
             'Content-Type': 'application/json', 
-            'Cookie': 'XSRF-TOKEN=9992fdd4-3dbb-4e1a-a4c5-e54ae6f6d1da'
+            'Cookie': "XSRF-TOKEN=" + information._csrf,
             
         }
         

@@ -1,9 +1,24 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getServers } from "~/models/servers.server";
+import { userToken } from "~/cookies";
 
-export const loader: LoaderFunction = async () => {
-    return json({ servers: await getServers() });
+export const loader: LoaderFunction = async ({request}) => {
+
+
+
+
+    const cookie = await userToken.parse(request.headers.get("Cookie"));
+
+
+
+    if (!cookie) {
+        return json({servers: []}, {status: 401});
+    }
+
+    const result = await getServers(cookie);
+
+    return json({ servers: result });
   };
 
   type LoaderData = {
@@ -25,8 +40,8 @@ export default function UserServers() {
 
           <div className="flex  items-center h-full justify-center space-x-10">
             <div className="grid grid-cols-3 gap-1 grid-rows-2">
-                {servers.map((server) => (
-                    <div className="w-full text-center rounded-md bg-gray-300">
+                {servers && servers.map((server) => (
+                    <div key={server.id} className="w-full text-center rounded-md bg-gray-300">
                         <Link className="text-3xl"  to={`/servers/${server.id}`}>
                             {server.ipAddress}:{server.port}
                         </Link>

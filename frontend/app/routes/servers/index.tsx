@@ -1,10 +1,21 @@
-import { json } from "@remix-run/node";
+import { json, LoaderFunction } from "@remix-run/node";
 import {Link, Outlet, useLoaderData } from "@remix-run/react";
+import { userToken } from "~/cookies";
 import { getServers } from "~/models/servers.server";
 
-export const loader = async () => {
+export const loader  : LoaderFunction= async ({request}) => {
+
+  console.log(request.headers.get("Cookie"),"cookie");
+
+  
+  const cookie = await userToken.parse(request.headers.get("Cookie"));
+
+  if (!cookie) {
+    return json({servers: []}, {status: 401});
+}
+
     return json<LoaderData>({
-        servers: await getServers()
+        servers: await getServers(cookie)
     })
 }
 

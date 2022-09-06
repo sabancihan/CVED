@@ -1,6 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { userToken } from "~/cookies";
 
 import { getServers } from "~/models/servers.server";
 
@@ -8,8 +9,14 @@ type LoaderData = {
   servers: Awaited<ReturnType<typeof getServers>>;
 };
 
-export const loader: LoaderFunction = async () => {
-  return json({ servers: await getServers() });
+export const loader: LoaderFunction = async ({request}) => {
+  const cookie = await userToken.parse(request.headers.get("Cookie"));
+
+  if (!cookie) {
+    return json({servers: []}, {status: 401});
+}
+
+  return json({ servers: await getServers(cookie) });
 };
 
 export default function PostAdmin() {

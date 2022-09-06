@@ -1,4 +1,5 @@
 
+import { redirect } from "@remix-run/node";
 import axios, { AxiosError, AxiosRequestConfig } from "axios"
 import spring_config from './spring_config';
 
@@ -16,17 +17,18 @@ const controller = new AbortController();
 springApi.interceptors.request.use(
     (config:AxiosRequestConfig) => {
         
-        const token = localStorage.getItem(spring_config.accessToken);
-        if (!token) {
-            window.location.href = "/?error=Giriş yapmanız gerekiyor";
-            
+      
+        if (config?.headers?.Authorization === undefined) {
+            //window.location.href = "/?error=Giriş yapmanız gerekiyor";
+
             controller.abort()
+            return null;
+
+
+            
         }
 
-        config.headers = {
-            Authorization: `Bearer ${token}`,
-        }
-
+  
 
         return config;
     }
@@ -38,8 +40,9 @@ springApi.interceptors.response.use(
     },
     (error:AxiosError) => {
         if (error.response?.status === 401) {
-            window.location.href = "/?error=Yetkiniz yok veya tekrar girmeniz gerekiyor";
-            localStorage.removeItem(spring_config.accessToken);
+            
+            return null;
+
             
         }
         return Promise.reject(error);

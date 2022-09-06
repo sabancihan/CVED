@@ -1,8 +1,9 @@
-import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node"
+import { ActionFunction, isCookie, json, LoaderFunction, redirect } from "@remix-run/node"
 import { useActionData, useLoaderData } from "@remix-run/react";
 import axios from "axios";
 import invariant from "tiny-invariant";
 import { getCsrf, login } from "~/models/login.server"
+import {userToken} from "../cookies"
 
 
 
@@ -68,12 +69,16 @@ export const action : ActionFunction = async ({ request }) => {
         });
         }
 
-        console.log(headers)
+        console.log(await userToken.serialize(headers))
 
+        //create cookie with token
+        return redirect("/servers/user", {
+          headers: {
+            "Set-Cookie": await userToken.serialize(headers)
+          },
+        });
+    
 
-      
-
-     return redirect("/servers");
       
 
   

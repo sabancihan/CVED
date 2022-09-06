@@ -2,22 +2,28 @@ import { json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getServer } from "~/models/servers.server";
 import invariant from "tiny-invariant";
+import { userToken } from "~/cookies";
 
 type  LoaderData = {
     server:  Awaited<ReturnType<typeof getServer>>;
 }
 
 export const loader: LoaderFunction = async ({
-    params ,
+    params ,request
   }) => {
+
+    const cookie = await userToken.parse(request.headers.get("Cookie"));
+
+    if (!cookie) {
+      return json({servers: []}, {status: 401});
+  }
+  
     console.log(params);
     invariant(params.id, "id is required");
 
-    const id = Number(params.id);
+  
 
-    invariant(!isNaN(id), "id must be a number");
-
-    const server = await getServer(id);
+    const server = await getServer(cookie,params.id);
 
     invariant(server, "Server not found");
 
@@ -29,10 +35,15 @@ export default function ServerDetail() {
     
     return (
         <main className="mx-auto max-w-4xl">
-          <h1 className="my-6 border-b-2 text-center text-3xl">
-            Some Server {server.ipAddress}
-          </h1>
+                   <div key={server.id} className="w-full text-center rounded-md bg-gray-300">
+                        {server.ipAddress}:{server.port}
+                        <h1>{server.cpu}</h1>
+                        <h1>{server.ram}</h1>
+                        <h1>{server.disk}</h1>
+                    </div>
         </main>
+
+        
       );
     
 }

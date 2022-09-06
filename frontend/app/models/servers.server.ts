@@ -1,80 +1,35 @@
 import springApi from "~/config/axios_interceptor";
 
-export async function getServers() : Promise<Array<Server>> {
+
+
+export async function getServers(token: string) : Promise<Array<Server>> {
     
-    return [
-        {
-            id: 1,
-            ipAddress: "125.201.74.234",
-            port: 25565,
-            cpu: "Ryzen 5 3600",
-            ram: "16 GB",
-            disk: "500 GB",
-            software: []
-        },
-        {
-            id: 2,
-            ipAddress: "55.72.13.31",
-            port: 2225,
-            cpu : "Apple M1",
-            ram: "8 GB",
-            disk: "256 GB",
-            software: []
-        },
-        {
-            id: 3,
-            ipAddress: "125.201.74.234",
-            port: 25565,
-            cpu: "Ryzen 5 3600",
-            ram: "16 GB",
-            disk: "500 GB",
-            software: []
-        },
-        {
-            id: 4,
-            ipAddress: "55.72.13.31",
-            port: 2225,
-            cpu : "Apple M1",
-            ram: "8 GB",
-            disk: "256 GB",
-            software: []
-        },
+   
 
-        {
-            id: 5,
-            ipAddress: "125.201.74.234",
-            port: 25565,
-            cpu: "Ryzen 5 3600",
-            ram: "16 GB",
-            disk: "500 GB",
-            software: []
-        },
-        {
-            id: 6,
-            ipAddress: "55.72.13.31",
-            port: 2225,
-            cpu : "Apple M1",
-            ram: "8 GB",
-            disk: "256 GB",
-            software: []
-        },
+   
+    const response = await springApi.get<Array<Server>>(`management/server`, {headers : { Authorization: `${token}`}});
 
-    ]
-    //const response = await springApi.get<Array<Server>>("/api/management/server");
-    //return response.data;
+
+            return response.data;
+        
+
+
+
+ 
+
+
+
 
 }
 
-export async function getServer(id: number) : Promise<Server> {
-    return  {
-        id : id,
-        ipAddress: `${id}.${id}.${id}.${id}`,
-        port: id,
-        cpu: "Intel Core i7-10700K",
-        ram: "32 GB",
-        disk: "1 TB SSD",
-        software: []
-    }
+export async function getServer(token: string,id: string) : Promise<Server> {
+ 
+    const response = await springApi.get<Server>(`management/server/${id}`, {headers : { Authorization: `${token}`}});
+
+     return response.data;
+    
+
+
 
 }
 
@@ -94,7 +49,7 @@ export async function createServer(server:
 
 
 type Server = {
-    id: number,
+    id: string,
     ipAddress: string;
     port: number;
     cpu: string;

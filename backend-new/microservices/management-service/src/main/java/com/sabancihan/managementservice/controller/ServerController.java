@@ -28,9 +28,14 @@ public class ServerController {
         return serverService.createServer(serverPostRequestDTO);
     }
 
-    @GetMapping("{username}")
+    @GetMapping("user/{username}")
     public List<ServerResponseDTO> getAllServersByUsername(@PathVariable String username) {
         return serverService.getAllServersByUsername(username);
+    }
+
+    @GetMapping("{id}")
+    public ServerResponseDTO getServerById(@PathVariable UUID id) {
+        return serverService.getServerResponseById(id);
     }
 
 
