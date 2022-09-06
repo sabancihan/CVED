@@ -135,6 +135,7 @@ public class SecurityConfig {
                  cors()
                  .and()
                  .csrf().csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
+                 .accessDeniedHandler((exchange, denied) -> Mono.empty())
                  .requireCsrfProtectionMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/login/**","/register/**"))
                  .and()
                  .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())

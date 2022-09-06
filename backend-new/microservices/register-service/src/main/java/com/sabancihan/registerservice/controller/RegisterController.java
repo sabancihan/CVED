@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/register")
 public class RegisterController {
@@ -17,12 +17,13 @@ public class RegisterController {
 
 
     @PostMapping
-    public void register(@Valid RegisterRequest registerRequest) {
+    public @ResponseBody void register(@RequestBody RegisterRequest registerRequest) {
 
         registerService.register(registerRequest);
 
 
     }
+
 
 
 }

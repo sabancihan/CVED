@@ -27,7 +27,7 @@ public class TokenAuthenticationManager implements ReactiveAuthenticationManager
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
 
-         var uid = authentication.getName() + "w";
+         var uid = authentication.getName();
 
         try {
             var context = ldapTemplate.searchForContext(query().where("uid").is(uid));
