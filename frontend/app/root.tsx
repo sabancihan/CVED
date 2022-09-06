@@ -30,7 +30,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-black bg-opacity-95">
         <Outlet />
         <ScrollRestoration />
         <Scripts />

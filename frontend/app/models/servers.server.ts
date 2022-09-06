@@ -21,6 +21,43 @@ export async function getServers() : Promise<Array<Server>> {
             disk: "256 GB",
             software: []
         },
+        {
+            id: 3,
+            ipAddress: "125.201.74.234",
+            port: 25565,
+            cpu: "Ryzen 5 3600",
+            ram: "16 GB",
+            disk: "500 GB",
+            software: []
+        },
+        {
+            id: 4,
+            ipAddress: "55.72.13.31",
+            port: 2225,
+            cpu : "Apple M1",
+            ram: "8 GB",
+            disk: "256 GB",
+            software: []
+        },
+
+        {
+            id: 5,
+            ipAddress: "125.201.74.234",
+            port: 25565,
+            cpu: "Ryzen 5 3600",
+            ram: "16 GB",
+            disk: "500 GB",
+            software: []
+        },
+        {
+            id: 6,
+            ipAddress: "55.72.13.31",
+            port: 2225,
+            cpu : "Apple M1",
+            ram: "8 GB",
+            disk: "256 GB",
+            software: []
+        },
 
     ]
     //const response = await springApi.get<Array<Server>>("/api/management/server");

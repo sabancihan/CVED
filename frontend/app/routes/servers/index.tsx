@@ -19,11 +19,13 @@ export default function Servers() {
     console.log(servers);
     return (
       <main>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center h-full">
 
-        <h1 className="text-5xl">Sunucularım</h1>
+          <div className="bg-gray-300 w-full text-center">
+            <h1 className="text-5xl text-white">Sunucular</h1>
+          </div>
         
-        <Outlet />
+          <Outlet />
 
         
 
