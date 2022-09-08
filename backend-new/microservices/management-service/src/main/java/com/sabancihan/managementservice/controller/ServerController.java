@@ -7,6 +7,7 @@ import com.sabancihan.managementservice.service.ServerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class ServerController {
     }
 
     @PostMapping
-    public ServerResponseDTO createServer(@RequestBody ServerPostRequestDTO serverPostRequestDTO) {
+    public ServerResponseDTO createServer(@Valid @RequestBody ServerPostRequestDTO serverPostRequestDTO) {
         return serverService.createServer(serverPostRequestDTO);
     }
 
@@ -46,7 +47,7 @@ public class ServerController {
     }
 
     @PatchMapping("{id}")
-    public ServerResponseDTO updateServer(@PathVariable UUID id, @RequestBody ServerPatchRequestDTO serverPatchRequestDTO) {
+    public ServerResponseDTO updateServer(@PathVariable UUID id, @Valid @RequestBody ServerPatchRequestDTO serverPatchRequestDTO) {
        return serverService.updateServer(id, serverPatchRequestDTO);
     }
 

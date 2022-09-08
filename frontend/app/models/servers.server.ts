@@ -33,18 +33,13 @@ export async function getServer(token: string,id: string) : Promise<Server> {
 
 }
 
-export async function createServer(server: 
-    Pick<Server,"cpu" | "ram" | "port" | "ipAddress" | "disk">
+export async function createServer(token : string,server: 
+    Pick<Server,"cpu" | "ram" | "port" | "ipAddress" | "disk" | "software" | "user">
     ) {
-    return  {
-        id : 3,
-        ipAddress: `15.21.11.13`,
-        port: 1888,
-        cpu: "Intel i5-9600K",
-        ram: "64 GB",
-        disk: "1 TB SSD",
-        software: []
-    }
+
+        const response = await springApi.post<Server>(`management/server`, server,{headers : {Authorization: `${token}`, 'Content-Type': 'application/json'}});
+
+        return response.data;
 }
 
 
@@ -56,6 +51,7 @@ type Server = {
     ram: string;
     disk: string;
     software: Array<Software>
+    user: String
 }
 
 

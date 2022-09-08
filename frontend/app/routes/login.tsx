@@ -114,19 +114,19 @@ export default function Login() {
 
     return (
         <main className="mx-auto max-w-4xl">
-            <h1 className="my-6 border-b-2 text-center text-3xl">
+            <h1 className="my-6 border-b-2 text-center text-3xl text-white">
                 Giriş
             </h1>
             <form method="post">
               <input type="hidden" name="_csrf" value={data._csrf} />
                 <div className="mb-4">
-                    <label  className="block mb-2 text-sm font-medium text-gray-600">
+                    <label  className="block mb-2 text-sm font-medium text-white">
                         Kullanıcı Adı
                     </label>
                     <input type="text" name="username" id="username" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
                 </div>
                 <div className="mb-4">
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-600">
+                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">
                         Şifre
                     </label>
                     <input type="password" name="password" id="password" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent" />

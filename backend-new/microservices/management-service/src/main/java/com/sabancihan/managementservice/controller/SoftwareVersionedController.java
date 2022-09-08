@@ -7,6 +7,7 @@ import com.sabancihan.managementservice.service.SoftwareVersionedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class SoftwareVersionedController {
     }
 
     @PostMapping
-    public SoftwareVersionedResponseDTO createSoftwareVersioned(@RequestBody SoftwareVersionedPostRequestDTO softwareVersionedPostRequestDTO) {
+    public SoftwareVersionedResponseDTO createSoftwareVersioned(@Valid  @RequestBody SoftwareVersionedPostRequestDTO softwareVersionedPostRequestDTO) {
         return softwareVersionedService.createSoftwareVersioned(softwareVersionedPostRequestDTO);
     }
 
@@ -42,7 +43,7 @@ public class SoftwareVersionedController {
     }
 
     @PatchMapping("{id}")
-    public SoftwareVersionedResponseDTO updateServer(@PathVariable UUID id, @RequestBody SoftwareVersionedPatchRequestDTO softwareVersionedPatchRequestDTO) {
+    public SoftwareVersionedResponseDTO updateServer(@PathVariable UUID id, @Valid @RequestBody SoftwareVersionedPatchRequestDTO softwareVersionedPatchRequestDTO) {
         return softwareVersionedService.updateSoftwareVersioned(id, softwareVersionedPatchRequestDTO);
     }
 

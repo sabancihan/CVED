@@ -6,11 +6,10 @@ import com.sabancihan.managementservice.mapstruct.dto.SoftwareResponseDTO;
 import com.sabancihan.managementservice.model.Software;
 import com.sabancihan.managementservice.service.SoftwareService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Value;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -27,7 +26,7 @@ public class SoftwareController {
 
 
      @PostMapping
-     public SoftwareResponseDTO createSoftware(SoftwarePostRequestDTO softwarePostRequestDTO) {
+     public SoftwareResponseDTO createSoftware(@Valid @RequestBody SoftwarePostRequestDTO softwarePostRequestDTO) {
          return softwareService.createSoftware(softwarePostRequestDTO);
      }
 

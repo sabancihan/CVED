@@ -48,6 +48,7 @@ public class ServerPostRequestDTO {
 
     @AssertTrue
     public boolean isValidHost() {
+
         return InetAddressUtils.isIPv4Address(ipAddress) && port > 0 && port < 65536;
     }
 }
