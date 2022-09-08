@@ -6,9 +6,11 @@ import com.sabancihan.managementservice.mapstruct.mapper.UserMapper;
 import com.sabancihan.managementservice.model.Server;
 import com.sabancihan.managementservice.model.Software;
 import com.sabancihan.managementservice.model.SoftwareVersioned;
+import com.sabancihan.managementservice.model.User;
 import com.sabancihan.managementservice.repository.ServerRepository;
 import com.sabancihan.managementservice.repository.SoftwareRepository;
 import com.sabancihan.managementservice.repository.SoftwareVersionedRepository;
+import com.sabancihan.managementservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
@@ -32,6 +34,8 @@ public class ServerService {
 
     private final UserMapper userMapper;
 
+
+    private final UserRepository userRepository;
     private final SoftwareVersionedRepository softwareVersionedRepository;
 
     private final ServerMapper serverMapper;
@@ -76,8 +80,17 @@ public class ServerService {
         serverRepository.deleteById(id);
     }
 
-    public ServerResponseDTO createServer(ServerPostRequestDTO serverPostRequestDTO) {
-        log.info("Creating server");
+    public ServerResponseDTO createServer(String email,ServerPostRequestDTO serverPostRequestDTO) {
+
+
+        var user = serverPostRequestDTO.getUser();
+
+        if (userRepository.findByUsername(user).isEmpty()) {
+            userRepository.save(User.builder().username(user).email(email).build());
+        }
+
+
+
         Server server = serverRepository.save(serverMapper.serverPostRequestDTOToServer(serverPostRequestDTO));
 
 

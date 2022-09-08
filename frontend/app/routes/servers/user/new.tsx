@@ -82,8 +82,8 @@ export default function NewServer() {
     const token = useOutletContext<ContextType>();
     const errors  = useActionData();
     return (
-      <Form method="post">
-        <h1 className="text-white text-xl font-bold">Server Oluştur</h1>
+      <Form method="post" className="mx-10">
+        <h1 className="text-white text-xl font-bold">Sunucu Oluştur</h1>
      <p>
           <label className="text-white">
             Ip Addresi:{" "}
@@ -139,6 +139,8 @@ export default function NewServer() {
             />
           </label>
         </p>
+
+        
 
         <p className="text-right">
         <button

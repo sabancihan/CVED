@@ -69,10 +69,10 @@ export default function UserServers() {
 
 
 
-          <div className="flex  items-center h-full justify-center space-x-10">
+          <div className="flex  items-center h-full justify-center">
 
           <div>
-              <EmblaCarousel slides={slides}  options={
+              <EmblaCarousel  slides={slides}  options={
                 {
                   skipSnaps: false,
                   slidesToScroll: 6,

@@ -5,4 +5,7 @@ com\sabancihan\apigateway\ldap\CustomLdapAuthoritiesPopulator.class
 com\sabancihan\apigateway\config\SecurityConfig.class
 com\sabancihan\apigateway\ldap\TokenAuthenticationManager.class
 com\sabancihan\apigateway\ldap\TokenProvider.class
+com\sabancihan\apigateway\ldap\AuthFilter.class
 com\sabancihan\apigateway\ldap\LdapAuthenticationFailureHandler.class
+com\sabancihan\apigateway\ldap\LdapSummary.class
+com\sabancihan\apigateway\ldap\LdapSummary$LdapSummaryBuilder.class

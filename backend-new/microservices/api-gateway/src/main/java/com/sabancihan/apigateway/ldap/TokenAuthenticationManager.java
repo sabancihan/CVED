@@ -7,11 +7,14 @@ import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.ldap.userdetails.InetOrgPerson;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import javax.naming.Name;
+
+import java.util.Map;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
@@ -29,38 +32,17 @@ public class TokenAuthenticationManager implements ReactiveAuthenticationManager
 
          var uid = authentication.getName();
 
-        try {
+
+
             var context = ldapTemplate.searchForContext(query().where("uid").is(uid));
 
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(authentication.getName(), null,  authoritiesPopulator.getGrantedAuthorities(context,uid));
+            //Get email from LDAP
+            var email = context.getStringAttribute("mail");
+
+
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(LdapSummary.builder().email(email).user_id(uid).build(), null,  authoritiesPopulator.getGrantedAuthorities(context,uid));
             return Mono.just(auth);
-        }
-        catch (Exception e) {
 
 
-            Name dn = LdapNameBuilder
-                    .newInstance()
-                    .add("ou", "people")
-                    .add("uid", uid)
-                    .build();
-            DirContextAdapter newContext = new DirContextAdapter(dn);
-
-            newContext.setAttributeValues(
-                    "objectclass",
-                    new String[]
-                            { "top",
-                                    "person",
-                                    "organizationalPerson",
-                                    "inetOrgPerson" });
-            newContext.setAttributeValue("cn", uid);
-            newContext.setAttributeValue("sn", uid);
-            newContext.setAttributeValue
-                    ("userPassword", uid);
-
-            ldapTemplate.bind(newContext);
-
-
-            return Mono.empty();
-        }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +19,8 @@ public class ServerController {
 
     private final ServerService serverService;
 
+    public final static String adminRole = "ROLE_ADMİNS";
+
     @GetMapping
     public List<ServerResponseDTO> getAllServers() {
 
@@ -25,8 +28,13 @@ public class ServerController {
     }
 
     @PostMapping
-    public ServerResponseDTO createServer(@Valid @RequestBody ServerPostRequestDTO serverPostRequestDTO) {
-        return serverService.createServer(serverPostRequestDTO);
+    public ServerResponseDTO createServer(@RequestHeader String user_email,@RequestHeader String user_id,@Valid @RequestBody ServerPostRequestDTO serverPostRequestDTO) {
+
+        if (user_id.equals(serverPostRequestDTO.getUser())) {
+            return serverService.createServer(user_email,serverPostRequestDTO);
+        } else {
+            throw new RuntimeException("User id does not match");
+        }
     }
 
     @GetMapping("user/{username}")
@@ -47,8 +55,12 @@ public class ServerController {
     }
 
     @PatchMapping("{id}")
-    public ServerResponseDTO updateServer(@PathVariable UUID id, @Valid @RequestBody ServerPatchRequestDTO serverPatchRequestDTO) {
-       return serverService.updateServer(id, serverPatchRequestDTO);
+    public ServerResponseDTO updateServer(@RequestHeader String user_role,@PathVariable UUID id, @Valid @RequestBody ServerPatchRequestDTO serverPatchRequestDTO) {
+        if (user_role.equals(adminRole)) {
+            return serverService.updateServer(id, serverPatchRequestDTO);
+        } else {
+            throw new RuntimeException("You are not authorized to update server");
+        }
     }
 
 
