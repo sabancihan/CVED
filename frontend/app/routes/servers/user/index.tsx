@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 
-export default function AdminIndex() {
+export default function UserIndex() {
   return (
     <p>
       <Link to="new" title="Yeni Sunucu Oluştur">

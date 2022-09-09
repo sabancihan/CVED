@@ -1,11 +1,14 @@
 import {json, redirect } from "@remix-run/node";
-import { Form ,useActionData, useOutletContext} from "@remix-run/react";
+import { Form ,Outlet,useActionData, useOutletContext} from "@remix-run/react";
 import { createServer } from "~/models/servers.server";
 import type { ActionFunction } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import type { ContextType } from "../user";
 import { userToken } from "~/cookies";
 import { SoftwareVersioned } from "~/models/servers.server";
+import { SoftwareInput } from "./new/software";
+import React from "react";
+import qs from "qs";
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg text-black`;
 
@@ -28,7 +31,12 @@ type ActionData =
   }
 
 export const action : ActionFunction = async ({ request }) => {
-    const formData = await request.formData();
+
+
+
+    const {ipAddress,port,cpu,ram,disk,software} = await qs.parse(await request.text());
+
+
 
 
     const cookie = await userToken.parse(request.headers.get("Cookie"));
@@ -39,14 +47,10 @@ export const action : ActionFunction = async ({ request }) => {
         return json({servers: []}, {status: 401});
     }
 
+
   
 
-    const ipAddress = formData.get("ipAddress");
-    const port = formData.get("port");
-    const cpu = formData.get("cpu");
-    const ram = formData.get("ram");
-    const disk = formData.get("disk");
-    const software = formData.getAll("software");
+
 
     const errors: ActionData = {
         ipAddress: ipAddress ? null : "ipAddress is required",
@@ -67,6 +71,7 @@ export const action : ActionFunction = async ({ request }) => {
         invariant(typeof disk === "string", "disk must be a string");
         invariant(isSoftwareVersionedArray(software), "software must be an array of SoftwareVersioned");
 
+
       const hasErrors = Object.values(errors).some(
         (errorMessage) => errorMessage
       );
@@ -75,17 +80,19 @@ export const action : ActionFunction = async ({ request }) => {
       }        
 
 
+      console.log(JSON.stringify(software),"software");
+
+
+
   
-    await createServer(cookie,{
-            port: portNumber,
-            disk: disk,
-            ram: ram,
-            cpu: cpu,
-            ipAddress: ipAddress,
-            software: software,
-            
-            
-    });
+   await createServer(cookie, {
+        ipAddress,
+        port: portNumber,
+        cpu,
+        ram,
+        disk,
+        software
+   })
   
     return redirect("/servers/user");
   };
@@ -94,9 +101,13 @@ export const action : ActionFunction = async ({ request }) => {
 export default function NewServer() {
     const token = useOutletContext<ContextType>();
     const errors  = useActionData();
+    const [software,setSoftware] = React.useState<SoftwareInput[]>([]);
+
+
     return (
+      <>
       <Form method="post" className="mx-10">
-        <h1 className="text-white text-xl font-bold">Sunucu Oluştur</h1>
+        <h1 className="text-white text-xl font-bold">Sunucu Ekle</h1>
      <p>
           <label className="text-white">
             Ip Addresi:{" "}
@@ -153,6 +164,18 @@ export default function NewServer() {
           </label>
         </p>
 
+
+        {software.map((item,index) => (
+         
+         <div key={`${item.vendor_name}:${item.product_name}:${item.version}`}>
+            <input type="hidden" name={`software[${index}][version]`} value={item.version} />
+  
+
+            <input type="hidden" name={`software[${index}][software][id][product_name]`} value={item.product_name} />
+            <input type="hidden" name={`software[${index}][software][id][vendor_name]`} value={item.vendor_name} />
+         </div>
+      
+        ))}
         
 
         <p className="text-right">
@@ -165,5 +188,11 @@ export default function NewServer() {
       </p>
 
       </Form>
+
+      <Outlet context={{
+        setSoftware: setSoftware,
+        software: software,
+      }}/>
+      </>
     );
   }

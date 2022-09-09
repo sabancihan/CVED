@@ -33,9 +33,12 @@ export const loader: LoaderFunction = async ({
 export default function ServerDetail() {
     const {server} = useLoaderData() as LoaderData;
 
-    const softwares = server.software.map(({software,version}) => (
-        <li className="capitalize">{software.id.vendor_name} {software.id.product_name} {version}</li>
-    ));
+    const softwares = server.software.map(({software,version}) => {
+        const key = `${software.id.vendor_name} ${software.id.product_name} ${version}`
+       return <li  key={key} className="capitalize">{key}</li>
+
+    })
+    
     
     return (
         <main className="mx-auto max-w-4xl">

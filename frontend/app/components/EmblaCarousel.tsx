@@ -33,8 +33,8 @@ export const EmblaCarousel = (props: PropType) => {
     <div className="embla">
     <div className="embla__viewport" ref={viewportRef}>
       <div className="embla__container">
-        {slides.map((index) => (
-          <div className="embla__slide" key={index?.toString()}>
+        {slides.map((index,deneme) => (
+          <div className="embla__slide" key={deneme}>
             <div className="embla__slide__inner">
                 {index}
             </div>
