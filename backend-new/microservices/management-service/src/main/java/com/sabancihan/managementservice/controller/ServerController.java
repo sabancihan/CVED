@@ -28,13 +28,11 @@ public class ServerController {
     }
 
     @PostMapping
-    public ServerResponseDTO createServer(@RequestHeader String user_email,@RequestHeader String user_id,@Valid @RequestBody ServerPostRequestDTO serverPostRequestDTO) {
+    public ServerResponseDTO createServer(@RequestHeader String user_email,@RequestHeader String user_id, @RequestBody ServerPostRequestDTO serverPostRequestDTO) {
 
-        if (user_id.equals(serverPostRequestDTO.getUser())) {
-            return serverService.createServer(user_email,serverPostRequestDTO);
-        } else {
-            throw new RuntimeException("User id does not match");
-        }
+        serverPostRequestDTO.setUser(user_id);
+        return serverService.createServer(user_email,serverPostRequestDTO);
+
     }
 
     @GetMapping("user/{username}")

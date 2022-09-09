@@ -32,6 +32,10 @@ export const loader: LoaderFunction = async ({
 
 export default function ServerDetail() {
     const {server} = useLoaderData() as LoaderData;
+
+    const softwares = server.software.map(({software,version}) => (
+        <li className="capitalize">{software.id.vendor_name} {software.id.product_name} {version}</li>
+    ));
     
     return (
         <main className="mx-auto max-w-4xl">
@@ -40,6 +44,10 @@ export default function ServerDetail() {
                         <h1>{server.cpu}</h1>
                         <h1>{server.ram}</h1>
                         <h1>{server.disk}</h1>
+                        <h1 className="text-white text-3xl border-y-2">Uygulamalar</h1>
+                        <ul>
+                            {softwares}
+                        </ul>
                     </div>
         </main>
 

@@ -1,12 +1,10 @@
 package com.sabancihan.managementservice.service;
 
+import com.google.common.collect.Sets;
 import com.sabancihan.managementservice.mapstruct.dto.*;
 import com.sabancihan.managementservice.mapstruct.mapper.ServerMapper;
 import com.sabancihan.managementservice.mapstruct.mapper.UserMapper;
-import com.sabancihan.managementservice.model.Server;
-import com.sabancihan.managementservice.model.Software;
-import com.sabancihan.managementservice.model.SoftwareVersioned;
-import com.sabancihan.managementservice.model.User;
+import com.sabancihan.managementservice.model.*;
 import com.sabancihan.managementservice.repository.ServerRepository;
 import com.sabancihan.managementservice.repository.SoftwareRepository;
 import com.sabancihan.managementservice.repository.SoftwareVersionedRepository;
@@ -18,6 +16,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,7 +79,7 @@ public class ServerService {
         serverRepository.deleteById(id);
     }
 
-    public ServerResponseDTO createServer(String email,ServerPostRequestDTO serverPostRequestDTO) {
+    public ServerResponseDTO createServer(String email,@Valid  ServerPostRequestDTO serverPostRequestDTO) {
 
 
         var user = serverPostRequestDTO.getUser();
@@ -101,17 +100,27 @@ public class ServerService {
         if (softwareSet != null) {
             softwareSet = server.getSoftware().stream().map(softwareVersioned -> {
 
-                        Software software = softwareVersioned.getSoftware();
+                SoftwareId softwareRequestId = softwareVersioned.getSoftware().getId();
 
-                        if (softwareRepository.findById(software.getId()).isEmpty())
-                            softwareRepository.save(software);
+                Software software = softwareRepository.findById(softwareRequestId).orElse(softwareRepository.save(Software.builder().id(softwareRequestId).softwareVersions(new HashSet<>()).build()));
+
+                softwareVersioned.setServer(server);
+
+                softwareVersioned.setSoftware(software);
+
+                SoftwareVersioned newSoftwareVersioned = softwareVersionedRepository.save(softwareVersioned);
 
 
-                        softwareVersioned.setServer(server);
 
 
 
-                        return softwareVersionedRepository.save(softwareVersioned);
+
+                software.getSoftwareVersions().addAll(Sets.newHashSet(newSoftwareVersioned));
+
+
+
+
+                return newSoftwareVersioned;
 
 
 

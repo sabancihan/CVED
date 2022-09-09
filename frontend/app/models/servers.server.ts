@@ -34,7 +34,7 @@ export async function getServer(token: string,id: string) : Promise<Server> {
 }
 
 export async function createServer(token : string,server: 
-    Pick<Server,"cpu" | "ram" | "port" | "ipAddress" | "disk" | "software" | "user">
+    Pick<Server,"cpu" | "ram" | "port" | "ipAddress" | "disk" | "software">
     ) {
 
         const response = await springApi.post<Server>(`management/server`, server,{headers : {Authorization: `${token}`, 'Content-Type': 'application/json'}});
@@ -50,13 +50,19 @@ type Server = {
     cpu: string;
     ram: string;
     disk: string;
-    software: Array<Software>
+    software: Array<SoftwareVersioned>
     user: String
 }
 
 
-type Software = {
+export type SoftwareVersioned = {
     version: string;
-    vendor: string;
-    name: string;
+    software: Software
+}
+
+type Software = {
+    id: {
+        vendor_name: string;
+        product_name: string;
+    }
 }

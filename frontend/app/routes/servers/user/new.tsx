@@ -5,6 +5,7 @@ import type { ActionFunction } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import type { ContextType } from "../user";
 import { userToken } from "~/cookies";
+import { SoftwareVersioned } from "~/models/servers.server";
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg text-black`;
 
@@ -17,6 +18,14 @@ type ActionData =
         disk: null | string;
     }
   | undefined;
+
+  function isSoftwareVersionedArray(software: any): software is SoftwareVersioned[] {
+    return Array.isArray(software) && software.every((item) => isSoftwareVersioned(item));
+  }
+
+  function isSoftwareVersioned(software: any): software is SoftwareVersioned {
+    return software.version !== undefined && software.software !== undefined;
+  }
 
 export const action : ActionFunction = async ({ request }) => {
     const formData = await request.formData();
@@ -37,6 +46,7 @@ export const action : ActionFunction = async ({ request }) => {
     const cpu = formData.get("cpu");
     const ram = formData.get("ram");
     const disk = formData.get("disk");
+    const software = formData.getAll("software");
 
     const errors: ActionData = {
         ipAddress: ipAddress ? null : "ipAddress is required",
@@ -55,6 +65,7 @@ export const action : ActionFunction = async ({ request }) => {
         invariant(typeof cpu === "string", "cpu must be a string");
         invariant(typeof ram === "string", "ram must be a string");
         invariant(typeof disk === "string", "disk must be a string");
+        invariant(isSoftwareVersionedArray(software), "software must be an array of SoftwareVersioned");
 
       const hasErrors = Object.values(errors).some(
         (errorMessage) => errorMessage
@@ -62,6 +73,8 @@ export const action : ActionFunction = async ({ request }) => {
       if (hasErrors) {
         return json<ActionData>(errors);
       }        
+
+
   
     await createServer(cookie,{
             port: portNumber,
@@ -69,8 +82,8 @@ export const action : ActionFunction = async ({ request }) => {
             ram: ram,
             cpu: cpu,
             ipAddress: ipAddress,
-            software: [],
-            user: "erhanb"
+            software: software,
+            
             
     });
   
