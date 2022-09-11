@@ -3,6 +3,7 @@ package com.sabancihan.managementservice.model;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
 import java.util.HashSet;

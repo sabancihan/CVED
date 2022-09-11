@@ -2,9 +2,11 @@ com\sabancihan\apigateway\config\TokenConfig.class
 com\sabancihan\apigateway\ldap\LdapAuthenticationSuccessHandler.class
 com\sabancihan\apigateway\ApiGatewayApplication.class
 com\sabancihan\apigateway\ldap\CustomLdapAuthoritiesPopulator.class
+com\sabancihan\apigateway\ldap\RoleGatewayFilterFactory.class
 com\sabancihan\apigateway\config\SecurityConfig.class
 com\sabancihan\apigateway\ldap\TokenAuthenticationManager.class
 com\sabancihan\apigateway\ldap\TokenProvider.class
+com\sabancihan\apigateway\ldap\RoleGatewayFilterFactory$Config.class
 com\sabancihan\apigateway\ldap\AuthFilter.class
 com\sabancihan\apigateway\ldap\LdapAuthenticationFailureHandler.class
 com\sabancihan\apigateway\ldap\LdapSummary.class

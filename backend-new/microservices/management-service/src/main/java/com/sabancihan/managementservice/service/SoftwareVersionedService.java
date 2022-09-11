@@ -151,6 +151,7 @@ public class SoftwareVersionedService {
     }
 
     public List<ManagementUpdateDTO> getAllSoftwareVersionedBySoftwareIds (Set<SoftwareId> ids) {
+
         List<SoftwareVersioned> softwareVersionedList = softwareVersionedRepository.findAllBySoftware_idIn(ids);
 
 

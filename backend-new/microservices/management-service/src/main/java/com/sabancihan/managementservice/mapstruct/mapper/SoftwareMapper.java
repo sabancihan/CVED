@@ -5,10 +5,7 @@ import com.sabancihan.managementservice.model.Server;
 import com.sabancihan.managementservice.model.Software;
 import com.sabancihan.managementservice.model.SoftwareId;
 import com.sabancihan.managementservice.service.SoftwareService;
-import org.mapstruct.InheritConfiguration;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -18,6 +15,8 @@ public interface SoftwareMapper {
 
 
     SoftwareResponseDTO softwareToSoftwareResponse(Software software);
+
+
 
 
     Software softwarePostRequestDTOToSoftware(SoftwarePostRequestDTO softwarePostRequestDTO);

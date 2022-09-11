@@ -41,17 +41,20 @@ export default function ServerDetail() {
     
     
     return (
-        <main className="mx-auto max-w-4xl">
-                   <div key={server.id} className="w-full text-center rounded-md bg-gray-300">
-                        {server.ipAddress}:{server.port}
-                        <h1>{server.cpu}</h1>
-                        <h1>{server.ram}</h1>
-                        <h1>{server.disk}</h1>
-                        <h1 className="text-white text-3xl border-y-2">Uygulamalar</h1>
-                        <ul>
-                            {softwares}
-                        </ul>
-                    </div>
+        <main className="mx-auto max-w-4xl h-screen">
+          <div className="h-full flex items-center">
+            <div key={server.id} className="w-full  text-center rounded-md bg-gray-300">
+                          <h1 className="text-white text-3xl border-b-2">Sunucu: {server.ipAddress}:{server.port}</h1>
+                          <h1 className="capitalize">İşlemci:  {server.cpu}</h1>
+                          <h1 className="capitalize">Ram: {server.ram}</h1>
+                          <h1 className="capitalize">Disk: {server.disk}</h1>
+                          <h1 className="text-white text-xl border-y-2">Uygulamalar</h1>
+                          <ul>
+                              {softwares}
+                          </ul>
+                      </div>
+          </div>
+               
         </main>
 
         

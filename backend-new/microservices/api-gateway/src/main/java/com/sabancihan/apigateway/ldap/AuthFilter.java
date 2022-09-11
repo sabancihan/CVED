@@ -47,12 +47,9 @@ public class AuthFilter implements GlobalFilter {
                     //Add user roles to headers
                     var role = authentication.getAuthorities().stream().findFirst();
 
-                    if (role.isEmpty()) {
-                        return Mono.error(new Exception("User has no role"));
-                    }
 
 
-                    exchange.getRequest().mutate().header("user_role", role.get().getAuthority());
+                    exchange.getRequest().mutate().header("user_role", role.isEmpty() ? null :  role.get().getAuthority());
                     return chain.filter(exchange);
 
                 });
