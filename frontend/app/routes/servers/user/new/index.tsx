@@ -23,7 +23,7 @@ export default function SoftwareIndex() {
             {softwares && softwares.map((software) => (
 
                 <div key={`${software.vendor_name}:${software.product_name}:${software.version}}`} className="flex flex-row space-x-2 text-white">
-                    <p>{software.product_name}</p>
+                    <p>{software.version}</p>
                     <p>{software.vendor_name}</p>
                     <p>{software.version}</p>
                 </div>

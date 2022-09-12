@@ -34,12 +34,15 @@ export const action : ActionFunction = async ({ request }) => {
 
 
 
-    const {ipAddress,port,cpu,ram,disk,software} = await qs.parse(await request.text());
+    let {ipAddress,port,cpu,ram,disk,software} = await qs.parse(await request.text());
+
+    software = software ?? []
 
 
 
 
     const cookie = await userToken.parse(request.headers.get("Cookie"));
+
 
 
 

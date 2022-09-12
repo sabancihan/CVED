@@ -1,6 +1,6 @@
 import { json, LoaderFunction } from "@remix-run/node";
 import { Link, Links, Meta, Outlet, useLoaderData } from "@remix-run/react";
-import { getServers } from "~/models/servers.server";
+import { getSelfServers, getServers } from "~/models/servers.server";
 import { userToken } from "~/cookies";
 import { EmblaCarousel } from "~/components/EmblaCarousel";
 
@@ -18,13 +18,13 @@ export const loader: LoaderFunction = async ({request}) => {
         return json({servers: []}, {status: 401});
     }
 
-    const result = await getServers(cookie);
+    const result = await getSelfServers(cookie);
 
     return json({ servers: result});
   };
 
   type LoaderData = {
-    servers: Awaited<ReturnType<typeof getServers>>;
+    servers: Awaited<ReturnType<typeof getSelfServers>>;
     token: string;
   };
 

@@ -15,12 +15,27 @@ export async function getServers(token: string) : Promise<Array<Server>> {
 
 
 
- 
-
-
-
-
 }
+
+export async function getSelfServers(token: string) : Promise<Array<Server>> {
+
+
+    const response = await springApi.get<Array<Server>>(`management/server/user`, {headers : { Authorization: `${token}`}});
+    return response.data;
+
+   
+}
+
+export async function getUserServers(token: string,username:string) : Promise<Array<Server>> {
+
+
+    const response = await springApi.get<Array<Server>>(`management/server/user/${username}`, {headers : { Authorization: `${token}`}});
+    return response.data;
+
+   
+}
+
+
 
 export async function getServer(token: string,id: string) : Promise<Server> {
  
@@ -58,6 +73,8 @@ type Server = {
 export type SoftwareVersioned = {
     version: string;
     software: Software
+    server?: String
+    id ?: string
 }
 
 type Software = {
@@ -65,4 +82,15 @@ type Software = {
         vendor_name: string;
         product_name: string;
     }
+}
+
+export type SoftwareVersionedPost = {
+    version: string;
+    software: SoftwareWithoutId
+    server: String
+}
+
+type SoftwareWithoutId = {
+    vendor_name: string;
+    product_name: string;
 }

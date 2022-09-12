@@ -1,6 +1,7 @@
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node"
 import { Link, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+import { userToken } from "~/cookies";
 import { getCsrf, login } from "~/models/login.server"
 
 
@@ -61,7 +62,12 @@ import { getCsrf, login } from "~/models/login.server"
 
       
 
-     return redirect("/servers");
+        //create cookie with token
+        return redirect("/servers/user", {
+          headers: {
+            "Set-Cookie": await userToken.serialize(headers)
+          },
+        });
       
 
   

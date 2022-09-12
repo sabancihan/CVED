@@ -1,4 +1,4 @@
-import { createCookie, MetaFunction } from "@remix-run/node";
+import { createCookie, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 
 import {
   Links,
@@ -21,6 +21,8 @@ export const meta: MetaFunction = () => ({
   title: "New Remix App",
   viewport: "width=device-width,initial-scale=1",
 });
+
+
 
 export default function App() {
  
